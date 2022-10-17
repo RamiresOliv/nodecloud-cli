@@ -1,0 +1,35 @@
+{
+  "name": "@ramiresoliv/squidcloudcli",
+  "version": "1.0.0",
+  "versionType": "beta",
+  "description": "",
+  "main": "bin/squidcloud",
+  "bin": {
+    "@ramiresoliv/squid-cloud": "bin/squidcloud",
+    "squid-cloud": "bin/squidcloud",
+    "squidcloud": "bin/squidcloud",
+    "squid-cloud-cli": "bin/squidcloud"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "squidcloud"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.1.2",
+    "discloud-cli": "^1.7.3",
+    "ejs": "^3.1.8",
+    "esm": "^3.2.25",
+    "form-data": "^4.0.0",
+    "gluegun": "^5.1.2",
+    "local-db-express": "^1.5.1",
+    "node-fetch": "^2.6.7"
+  }
+}
