@@ -1,0 +1,1 @@
+# squidcloud-cli
