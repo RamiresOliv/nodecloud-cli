@@ -1,6 +1,7 @@
 const { readdirSync } = require("fs");
 const cli_toolbox = require("gluegun");
-const EJS = require("ejs");
+const ejs = require("ejs");
+
 // Only Time commands handler
 exports.cli = async (args) => {
   const commands = {};
@@ -66,7 +67,7 @@ exports.cli = async (args) => {
 
   try {
     args[2] = null;
-    cli_toolbox.EJS = EJS; // adds EJS in gluegun toolbox
+    cli_toolbox.EJS = ejs; // adds EJS in gluegun toolbox
     cmdRun(cli_toolbox, args);
   } catch (err) {
     cli_toolbox.print.error(`---`);

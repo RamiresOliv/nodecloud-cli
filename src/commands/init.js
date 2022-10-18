@@ -12,7 +12,7 @@ exports.run = async (toolbox, args) => {
       "CloudSettings - Reader Debug"
     );
   } else if (args[3] == "-y") {
-    FileWorker.createConfigFile(
+    return FileWorker.createConfigFile(
       toolbox,
       [defaultConfigs.name, defaultConfigs.main],
       args[0],
@@ -40,12 +40,13 @@ exports.run = async (toolbox, args) => {
   );
   setTimeout(() => {
     FileWorker.createConfigFile(toolbox, [name, main], args[0], args[1]).then(
-      (ok) => {
+      (ok, data) => {
         loading.succeed(
           toolbox.print.colors.green(
             'Arquivo de configuração da Cloud "Cloud.config", foi criado.'
           )
         );
+        process.kill(0);
       }
     );
   }, 3000);

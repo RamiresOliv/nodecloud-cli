@@ -25,14 +25,14 @@ exports.run = async (toolbox, args) => {
           "🥳 Parabéns! Agora sua conta está vinculada com essa CLI! Os comandos agora estarão disponiveis!"
         )
       );
-      return "success#200$" + res[1];
+      process.kill(0);
     } else {
       loading.fail(toolbox.print.colors.red("Falha, " + res[1]));
-      return "err-login-http-recused#403$" + res[1];
+      process.kill(0);
     }
   } else {
     toolbox.print.error("Finalizado, você cancelou o login.");
-    return "err-login-confirm-recused#400";
+    process.kill(0);
   }
 };
 

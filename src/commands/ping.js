@@ -12,6 +12,7 @@ exports.run = async (toolbox, args) => {
     if (args[2] == "--debug") {
       toolbox.print.muted("[DEBUG] HTTP RESPONSE: " + data);
     }
+    process.kill(0);
     if (result >= 1000) {
       toolbox.print.warning(
         "Bem... Parece que o ping está meio alto... Verifique sua internet. Se caso não for isso pedimos desculpas."
@@ -19,6 +20,7 @@ exports.run = async (toolbox, args) => {
     }
   } else {
     spinner.fail("Falha em tentar receber o ping...");
+    process.kill(0);
   }
 };
 
