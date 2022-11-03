@@ -2,6 +2,8 @@ const { readdirSync } = require("fs");
 const cli_toolbox = require("gluegun");
 const ejs = require("ejs");
 
+cli_toolbox.print.colors.warning("aaaaaaaaa");
+
 // Only Time commands handler
 exports.cli = async (args) => {
   const commands = {};

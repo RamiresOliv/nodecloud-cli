@@ -1,6 +1,8 @@
 exports.api = {};
 ApiUrl = "http://localhost:8080";
 
+const FormData = require("form-data");
+
 // Api solvers
 exports.api.post = {
   ping: Function,
@@ -12,29 +14,37 @@ exports.api.post = {
 };
 
 exports.api.get = {
+  getApps: Function,
   apps: Function,
   app: Function,
   logs: Function,
 };
 
 // Posts Functions:
-exports.api.post.ping = async (toolbox, token) => {
+exports.api.post.ping = async (toolbox) => {
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
   const result = api.post("/ping");
   return result;
 };
-exports.api.post.up = async (toolbox, token) => {
+exports.api.post.up = async (
+  toolbox,
+  CompactedProjectPath,
+  fileName,
+  token
+) => {
+  const form = new FormData();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
-  const result = api.post(
-    "/upload",
-    {},
+  const result = await api.post(
+    "/do/@me/upload",
+    [require("fs").readFileSync(CompactedProjectPath)],
     {
       headers: {
-        ["@tokenauth: my-user-auth"]: token,
+        ["Token"]: token,
+        ["fileName"]: fileName,
       },
     }
   );
@@ -46,11 +56,11 @@ exports.api.post.commit = async (toolbox, token) => {
     baseURL: ApiUrl,
   });
   const result = api.post(
-    "/commit",
+    "/do/@me/commit",
     {},
     {
       headers: {
-        ["@tokenauth: my-user-auth"]: token,
+        ["Token"]: token,
       },
     }
   );
@@ -62,11 +72,11 @@ exports.api.post.restart = async (toolbox, token) => {
     baseURL: ApiUrl,
   });
   const result = api.post(
-    "/restart",
+    "/do/@me/restart",
     {},
     {
       headers: {
-        ["@tokenauth: my-user-auth"]: token,
+        ["Token"]: token,
       },
     }
   );
@@ -78,11 +88,11 @@ exports.api.post.start = async (toolbox, token) => {
     baseURL: ApiUrl,
   });
   const result = api.post(
-    "/start",
+    "/do/@me/start",
     {},
     {
       headers: {
-        ["@tokenauth: my-user-auth"]: token,
+        ["Token"]: token,
       },
     }
   );
@@ -94,13 +104,16 @@ exports.api.post.stop = async (toolbox, token) => {
     baseURL: ApiUrl,
   });
   const result = api.post(
-    "/stop",
+    "/do/@me/stop",
     {},
     {
       headers: {
-        ["@tokenauth: my-user-auth"]: token,
+        ["Token"]: token,
       },
     }
   );
   return result;
 };
+
+// Get Functions:
+

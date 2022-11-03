@@ -20,29 +20,25 @@ exports.checkAuth = async (toolbox, token) => {
   return result;
 };
 
-exports.getAuth = async (toolbox, token) => {
+exports.getAuth = async (toolbox) => {
   const existence = await db.document.exists("Auth", "MyToken");
 
   if (existence) {
-    return await db.document.get("Auth", "MyToken");
+    return { ok: true, token: await db.document.get("Auth", "MyToken") };
   } else return { ok: false, code: 404 };
 };
 
 exports.registerNewToken = async (toolbox, token) => {
   const { ok, data } = await exports.checkAuth(toolbox, token);
   if (ok) {
-    console.log(data.exists);
     if (data.exists) {
       const existence = await db.document.exists("Auth", "MyToken");
-      console.log(existence);
       if (existence) {
         db.document.update("Auth", "MyToken", (oldValue) => {
           return token;
         });
       } else {
-        console.log("era pra adicionar");
-        const r = await db.document.add("Auth", "MyToken", token);
-        console.log(r);
+        await db.document.add("Auth", "MyToken", token);
       }
       return [ok, data];
     } else {

@@ -31,13 +31,18 @@ exports.run = async (toolbox, args) => {
       message: "Porfavor insire o nome do arquivo de inicialização.",
     },
   ]);
-  toolbox.print.warning(
-    'O valor "IGNOREDS" foi criado automaticamente ' +
-      toolbox.print.colors.bold(toolbox.print.colors.underline("VAZIO!"))
-  );
+  if (!name == "")
+    toolbox.print.warning(
+      'O valor "IGNOREDS" foi criado automaticamente ' +
+        toolbox.print.colors.bold(toolbox.print.colors.underline("VAZIO!"))
+    );
   const loading = toolbox.print.spin(
     toolbox.print.colors.cyan("Continuando...")
   );
+  if (name == "") {
+    loading.fail(toolbox.print.colors.red("A aplicação precisa de um nome."));
+    process.kill(0);
+  }
   setTimeout(() => {
     FileWorker.createConfigFile(toolbox, [name, main], args[0], args[1]).then(
       (ok, data) => {
@@ -46,6 +51,7 @@ exports.run = async (toolbox, args) => {
             'Arquivo de configuração da Cloud "Cloud.config", foi criado.'
           )
         );
+        toolbox.print(data.configFileContent);
         process.kill(0);
       }
     );
