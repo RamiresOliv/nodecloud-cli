@@ -1,4 +1,4 @@
-ApiUrl = "http://localhost:8080";
+ApiUrl = "http://localhost:2552";
 
 const db = require("local-db-express");
 

@@ -51,7 +51,6 @@ exports.run = async (toolbox, args) => {
             'Arquivo de configuração da Cloud "Cloud.config", foi criado.'
           )
         );
-        toolbox.print(data.configFileContent);
         process.kill(0);
       }
     );
@@ -60,6 +59,6 @@ exports.run = async (toolbox, args) => {
 
 exports.config = {
   name: "init",
-  description: "Show all commands disponible in the CLI.",
-  aliases: ["inicializar", "i"],
+  description: "Create a new Cloud config file.",
+  aliases: ["c", "inicializar"],
 };

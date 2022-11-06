@@ -1,7 +1,7 @@
 const { FileWorker, Authentification, Tempo, SquidApi } = require("../util");
 
 exports.run = async (toolbox, args) => {
-  toolbox.print.info(toolbox.print.colors.dim("Processo: Start"));
+  toolbox.print.info(toolbox.print.colors.dim("Processo: Logs"));
 
   setTimeout(async () => {
     const { ok, token } = await Authentification.getAuth(toolbox);
@@ -29,7 +29,7 @@ exports.run = async (toolbox, args) => {
         const askProjects = {
           type: "select",
           name: "Project",
-          message: "Qual o seu projeto que você deseja ser ativado?",
+          message: "Qual o seu projeto que você deseja ver o terminal?",
           choices: resGetProjects.data.returns.returns,
         };
         const askPrompt = await toolbox.prompt.ask([askProjects]);
@@ -44,7 +44,7 @@ exports.run = async (toolbox, args) => {
         );
         setTimeout(async () => {
           SquidApi.api.post
-            .start(toolbox, askPrompt.Project, token.document)
+            .logs(toolbox, askPrompt.Project, token.document)
             .then((res) => {
               if (res.data.returns && res.data.returns.ok) {
                 spinner1.succeed(
@@ -101,7 +101,7 @@ exports.run = async (toolbox, args) => {
 };
 
 exports.config = {
-  name: "start",
-  description: "Start remotly a application in Cloud.",
-  aliases: ["i", "iniciar"],
+  name: "logs",
+  description: "Mostra o terminal da aplicação selecionada.",
+  aliases: ["t", "terminal"],
 };

@@ -1,7 +1,7 @@
 const { FileWorker, Authentification, Tempo, SquidApi } = require("../util");
 
 exports.run = async (toolbox, args) => {
-  toolbox.print.info(toolbox.print.colors.dim("Processo: Start"));
+  toolbox.print.info(toolbox.print.colors.dim("Processo: Delete"));
 
   setTimeout(async () => {
     const { ok, token } = await Authentification.getAuth(toolbox);
@@ -44,7 +44,7 @@ exports.run = async (toolbox, args) => {
         );
         setTimeout(async () => {
           SquidApi.api.post
-            .start(toolbox, askPrompt.Project, token.document)
+            .delete(toolbox, askPrompt.Project, token.document)
             .then((res) => {
               if (res.data.returns && res.data.returns.ok) {
                 spinner1.succeed(
@@ -101,7 +101,7 @@ exports.run = async (toolbox, args) => {
 };
 
 exports.config = {
-  name: "start",
-  description: "Start remotly a application in Cloud.",
-  aliases: ["i", "iniciar"],
+  name: "delete",
+  description: "Delete a application remotly in the Cloud.",
+  aliases: ["d", "del", "deletar"],
 };

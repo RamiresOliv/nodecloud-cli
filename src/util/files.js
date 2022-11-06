@@ -40,7 +40,6 @@ exports.checkRequiredFiles = async (toolbox, path) => {
   if (r[0] == false && r[1] == "500") {
     return [false, 500];
   }
-  console.log(r);
   if (r[2].NAME == null || r[2].START == null || r[2].IGNOREDS == null) {
     return [false, 400];
   }

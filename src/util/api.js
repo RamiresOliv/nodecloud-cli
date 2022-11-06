@@ -1,23 +1,27 @@
 exports.api = {};
-ApiUrl = "http://localhost:8080";
+exports.api.post = {};
+ApiUrl = "http://localhost:2552";
 
 const FormData = require("form-data");
+const { createWriteStream } = require("fs");
+const Tempo = require("./temp");
 
 // Api solvers
 exports.api.post = {
+  bin: {},
   ping: Function,
   up: Function,
   commit: Function,
   restart: Function,
   start: Function,
   stop: Function,
-};
-
-exports.api.get = {
-  getApps: Function,
   apps: Function,
   app: Function,
   logs: Function,
+};
+
+exports.api.post.bin = {
+  getMyProjects: Function,
 };
 
 // Posts Functions:
@@ -34,7 +38,6 @@ exports.api.post.up = async (
   fileName,
   token
 ) => {
-  const form = new FormData();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
@@ -48,48 +51,64 @@ exports.api.post.up = async (
       },
     }
   );
+  console.log(result.data);
   return result;
 };
 
-exports.api.post.commit = async (toolbox, token) => {
+exports.api.post.commit = async (
+  toolbox,
+  CompactedProjectPath,
+  fileName,
+  projectName,
+  token
+) => {
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
-  const result = api.post(
+  const result = await api.post(
     "/do/@me/commit",
-    {},
+    [require("fs").readFileSync(CompactedProjectPath)],
     {
       headers: {
         ["Token"]: token,
+        ["fileName"]: fileName,
+        ["projectName"]: projectName,
       },
     }
   );
   return result;
 };
 
-exports.api.post.restart = async (toolbox, token) => {
+exports.api.post.logs = async (toolbox, AppName, token) => {
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
-  const result = api.post(
-    "/do/@me/restart",
-    {},
+  const result = await api.post(
+    "/do/@me/getLogs",
+    { appname: AppName },
     {
       headers: {
         ["Token"]: token,
       },
     }
   );
-  return result;
+  const buffered = Buffer.from(result.data.logs, "utf8");
+  const a = createWriteStream(
+    Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".log"
+  );
+  console.log(buffered);
+  a.write(buffered);
+  a.close();
+  return result.data.logs;
 };
 
-exports.api.post.start = async (toolbox, token) => {
+exports.api.post.start = async (toolbox, AppName, token) => {
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
   const result = api.post(
     "/do/@me/start",
-    {},
+    { appname: AppName },
     {
       headers: {
         ["Token"]: token,
@@ -99,12 +118,28 @@ exports.api.post.start = async (toolbox, token) => {
   return result;
 };
 
-exports.api.post.stop = async (toolbox, token) => {
+exports.api.post.stop = async (toolbox, AppName, token) => {
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
   const result = api.post(
     "/do/@me/stop",
+    { appname: AppName },
+    {
+      headers: {
+        ["Token"]: token,
+      },
+    }
+  );
+  return result;
+};
+
+exports.api.post.bin.getMyProjects = async (toolbox, token) => {
+  const api = toolbox.http.create({
+    baseURL: ApiUrl,
+  });
+  const result = await api.post(
+    "/do/@me/getProjects",
     {},
     {
       headers: {
@@ -116,4 +151,3 @@ exports.api.post.stop = async (toolbox, token) => {
 };
 
 // Get Functions:
-
