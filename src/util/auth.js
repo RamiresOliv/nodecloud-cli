@@ -4,6 +4,7 @@ const db = require("local-db-express");
 
 db.collection.create("Auth");
 
+// Selling this product is not allowed.
 exports.checkAuth = async (toolbox, token) => {
   const api = toolbox.http.create({
     baseURL: ApiUrl,

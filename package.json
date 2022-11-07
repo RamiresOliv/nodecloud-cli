@@ -1,12 +1,13 @@
 {
-  "name": "@ramiresoliv/squidcloudcli",
-  "version": "1.0.0",
+  "name": "@ramiresoliv/squidcloud-cli",
+  "version": "1.6.3",
   "versionType": "beta",
-  "description": "",
-  "main": "bin/squidcloud",
+  "description": "This CLI is used for the SquidCloud possibiliting make everthing remotely!",
+  "main": "bin/oops",
   "bin": {
-    "@ramiresoliv/squid-cloud": "bin/squidcloud",
+    "@ramiresoliv/squidcloudcli": "bin/squidcloud",
     "squid-cloud": "bin/squidcloud",
+    "scc": "bin/squidcloud",
     "squidcloud": "bin/squidcloud",
     "squid-cloud-cli": "bin/squidcloud"
   },
@@ -18,18 +19,15 @@
   },
   "keywords": [
     "cli",
-    "squidcloud"
+    "squidcloud",
+    "squidcloud-cli"
   ],
-  "author": "",
+  "author": "RamiresOliv",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.1.2",
-    "discloud-cli": "^1.7.3",
+    "archiver": "^5.3.1",
     "ejs": "^3.1.8",
-    "esm": "^3.2.25",
-    "form-data": "^4.0.0",
     "gluegun": "^5.1.2",
-    "local-db-express": "^1.5.1",
-    "node-fetch": "^2.6.7"
+    "local-db-express": "^1.5.2"
   }
 }

@@ -11,7 +11,8 @@ exports.run = async (toolbox, args) => {
     },
   ]);
   const confirmation = await toolbox.prompt.confirm(
-    "Você tem certeza? Se sim, o Token será usado nessa CLI se não, iremos cancelar."
+    "Você tem que quer se conectar a SquidCloud com esse token?",
+    true
   );
 
   if (confirmation) {

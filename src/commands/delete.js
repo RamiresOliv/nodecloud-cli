@@ -29,10 +29,39 @@ exports.run = async (toolbox, args) => {
         const askProjects = {
           type: "select",
           name: "Project",
-          message: "Qual o seu projeto que você deseja ser ativado?",
+          message:
+            "Qual o seu projeto que você deseja que sejá removido da Cloud?",
           choices: resGetProjects.data.returns.returns,
         };
         const askPrompt = await toolbox.prompt.ask([askProjects]);
+
+        const confirmation = await toolbox.prompt.confirm(
+          "Você tem certeza que quer remover " +
+            askPrompt.Project +
+            " da Cloud??",
+          false
+        );
+
+        if (!confirmation) {
+          toolbox.print.error("Finalizado, você cancelou o delete request.");
+          process.kill(0);
+        }
+
+        const { appName } = await toolbox.prompt.ask([
+          {
+            type: "input",
+            name: "appName",
+            message:
+              "Porfavor antes de continuar digite o nome da aplicação... " +
+              toolbox.print.colors.muted("(" + askPrompt.Project + ")") +
+              ".",
+          },
+        ]);
+
+        if (appName != askPrompt.Project) {
+          toolbox.print.error("Finalizado, nome da aplicação incorreto.");
+          process.kill(0);
+        }
 
         const spinner1 = new toolbox.print.spin(
           toolbox.print.colors.cyan(
@@ -57,7 +86,9 @@ exports.run = async (toolbox, args) => {
                 );
                 toolbox.print.success(
                   toolbox.print.colors.green(
-                    "🥳 A ação foi finalizada com sucesso!"
+                    "😢 Finalizado, sucesso em deletar a aplicação! Mas speramos você denovo! Adeus " +
+                      askPrompt.Project +
+                      " 👋"
                   )
                 );
                 process.kill(0);

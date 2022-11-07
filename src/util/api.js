@@ -2,22 +2,24 @@ exports.api = {};
 exports.api.post = {};
 ApiUrl = "http://localhost:2552";
 
-const FormData = require("form-data");
-const { createWriteStream } = require("fs");
+const { createWriteStream, appendFileSync, readFileSync } = require("fs");
 const Tempo = require("./temp");
+
+// Selling this product is not allowed.
 
 // Api solvers
 exports.api.post = {
   bin: {},
-  ping: Function,
-  up: Function,
-  commit: Function,
-  restart: Function,
-  start: Function,
-  stop: Function,
-  apps: Function,
-  app: Function,
-  logs: Function,
+  ping: Function, // working
+  up: Function, // working
+  commit: Function, // working
+  delete: Function, // working
+  restart: Function, // non-disponible
+  start: Function, // working
+  stop: Function, // working
+  apps: Function, // in-dev
+  app: Function, // in-dev
+  logs: Function, // working
 };
 
 exports.api.post.bin = {
@@ -25,13 +27,6 @@ exports.api.post.bin = {
 };
 
 // Posts Functions:
-exports.api.post.ping = async (toolbox) => {
-  const api = toolbox.http.create({
-    baseURL: ApiUrl,
-  });
-  const result = api.post("/ping");
-  return result;
-};
 exports.api.post.up = async (
   toolbox,
   CompactedProjectPath,
@@ -51,7 +46,6 @@ exports.api.post.up = async (
       },
     }
   );
-  console.log(result.data);
   return result;
 };
 
@@ -79,6 +73,38 @@ exports.api.post.commit = async (
   return result;
 };
 
+exports.api.post.delete = async (toolbox, AppName, token) => {
+  const api = toolbox.http.create({
+    baseURL: ApiUrl,
+  });
+  const result = api.post(
+    "/do/@me/delete",
+    { appname: AppName },
+    {
+      headers: {
+        ["Token"]: token,
+      },
+    }
+  );
+  return result;
+};
+
+exports.api.post.start = async (toolbox, AppName, token) => {
+  const api = toolbox.http.create({
+    baseURL: ApiUrl,
+  });
+  const result = api.post(
+    "/do/@me/start",
+    { appname: AppName },
+    {
+      headers: {
+        ["Token"]: token,
+      },
+    }
+  );
+  return result;
+};
+
 exports.api.post.logs = async (toolbox, AppName, token) => {
   const api = toolbox.http.create({
     baseURL: ApiUrl,
@@ -93,13 +119,24 @@ exports.api.post.logs = async (toolbox, AppName, token) => {
     }
   );
   const buffered = Buffer.from(result.data.logs, "utf8");
-  const a = createWriteStream(
-    Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".log"
+  appendFileSync(
+    Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".log",
+    buffered
   );
-  console.log(buffered);
-  a.write(buffered);
-  a.close();
-  return result.data.logs;
+  appendFileSync(
+    Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".txt",
+    buffered
+  );
+  result.added = {};
+  result.added.txtPath =
+    Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".txt";
+  result.added.logPath =
+    Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".log";
+  result.added.translated = readFileSync(
+    Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".log",
+    "utf8"
+  );
+  return result;
 };
 
 exports.api.post.start = async (toolbox, AppName, token) => {
@@ -150,4 +187,13 @@ exports.api.post.bin.getMyProjects = async (toolbox, token) => {
   return result;
 };
 
+exports.api.post.ping = async (toolbox) => {
+  const api = toolbox.http.create({
+    baseURL: ApiUrl,
+  });
+  const result = api.post("/ping");
+  return result;
+};
+
 // Get Functions:
+//xd

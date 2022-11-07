@@ -1,4 +1,11 @@
-const { FileWorker, Authentification, Tempo, SquidApi } = require("../util");
+const {
+  FileWorker,
+  Authentification,
+  Tempo,
+  SquidApi,
+  Exec,
+} = require("../util");
+const { spawn } = require("child_process");
 
 exports.run = async (toolbox, args) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Logs"));
@@ -45,8 +52,8 @@ exports.run = async (toolbox, args) => {
         setTimeout(async () => {
           SquidApi.api.post
             .logs(toolbox, askPrompt.Project, token.document)
-            .then((res) => {
-              if (res.data.returns && res.data.returns.ok) {
+            .then(async (res) => {
+              if (res.data.ok) {
                 spinner1.succeed(
                   toolbox.print.colors.green(
                     "Continuando trabalho na Cloud..." +
@@ -60,6 +67,43 @@ exports.run = async (toolbox, args) => {
                     "🥳 A ação foi finalizada com sucesso!"
                   )
                 );
+                if (
+                  (args[2] != null && args[2].toLowerCase() == "--open") ||
+                  (args[2] != null && args[2].toLowerCase() == "-open")
+                )
+                  await Exec.openTXTFile(res.added.txtPath);
+                if (res.added.translated.split("\n").length >= 1000) {
+                  const confirmation = await toolbox.prompt.confirm(
+                    toolbox.print.colors.yellow(
+                      'O terminal de "' +
+                        askPrompt.Project +
+                        '" parece ser muito grande! '
+                    ) + "Desejá abrir os logs no seu bloco de notas?",
+                    true
+                  );
+                  if (confirmation) {
+                    await Exec.openTXTFile(res.added.txtPath);
+                    console.log(
+                      toolbox.print.colors.muted(
+                        res.added.logPath.replace(`\\`, "/")
+                      )
+                    );
+                  } else {
+                    console.log(
+                      toolbox.print.colors.muted(
+                        askPrompt.Project.toUpperCase() +
+                          " LOGS ----------------------------------------------------------------------------------------------------------------------------------"
+                      )
+                    );
+                    console.log(res.added.translated);
+                    console.log(
+                      toolbox.print.colors.muted(
+                        askPrompt.Project.toUpperCase() +
+                          " LOGS END ----------------------------------------------------------------------------------------------------------------------------------"
+                      )
+                    );
+                  }
+                }
                 process.kill(0);
               } else {
                 if (res.data.errcode == 500) {
@@ -72,7 +116,7 @@ exports.run = async (toolbox, args) => {
                     )
                   );
                   process.kill(0);
-                } else if (!res.data.returns.ok) {
+                  /*} else if (!res.data.ok) {
                   spinner1.fail(
                     toolbox.print.colors.red(
                       res.data.returns.msg +
@@ -81,7 +125,7 @@ exports.run = async (toolbox, args) => {
                         )
                     )
                   );
-                  process.kill(0);
+                  process.kill(0);*/
                 } else {
                   spinner1.fail(
                     toolbox.print.colors.red(

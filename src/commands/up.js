@@ -89,59 +89,63 @@ exports.run = async (toolbox, args) => {
               toolbox.print.colors.muted(" 📦 Empacotando arquivos.")
           )
         );
+        var sended = false;
         spinner3.start();
-        SquidApi.api.post
-          .up(toolbox, zipR.filePath, zipR.fileName, token.document)
-          .then((res) => {
-            if (res.data.returns && res.data.returns.ok) {
-              spinner3.succeed(
-                toolbox.print.colors.green(
-                  "Continuando trabalho na Cloud..." +
-                    toolbox.print.colors.muted(
-                      " ☁️ Agora é só relaxar, nós cuidamos disso!  "
-                    )
-                )
-              );
-              toolbox.print.success(
-                toolbox.print.colors.green(
-                  "🥳 A ação foi finalizada com sucesso!"
-                )
-              );
-              process.kill(0);
-            } else {
-              if (res.data.errcode == 500) {
-                spinner3.fail(
-                  toolbox.print.colors.red(
-                    "Ocorreu algum problema com a Cloud!" +
+        if (!sended) {
+          sended = true;
+          SquidApi.api.post
+            .up(toolbox, zipR.filePath, zipR.fileName, token.document)
+            .then((res) => {
+              if (res.data.returns && res.data.returns.ok) {
+                spinner3.succeed(
+                  toolbox.print.colors.green(
+                    "Continuando trabalho na Cloud..." +
                       toolbox.print.colors.muted(
-                        " ☁️ Tente novamente mais tarde! Desculpe :<"
+                        " ☁️ Agora é só relaxar, nós cuidamos disso!  "
                       )
                   )
                 );
-                process.kill(0);
-              } else if (!res.data.returns.ok) {
-                spinner3.fail(
-                  toolbox.print.colors.red(
-                    res.data.returns.msg +
-                      toolbox.print.colors.muted(
-                        " ☁️ Tente novamente mais tarde! Desculpe :<"
-                      )
+                toolbox.print.success(
+                  toolbox.print.colors.green(
+                    "🥳 A ação foi finalizada com sucesso!"
                   )
                 );
                 process.kill(0);
               } else {
-                spinner3.fail(
-                  toolbox.print.colors.red(
-                    res.data.msg +
-                      toolbox.print.colors.muted(
-                        " ☁️ Tente novamente mais tarde! Desculpe :<"
-                      )
-                  )
-                );
-                process.kill(0);
+                if (res.data.errcode == 500) {
+                  spinner3.fail(
+                    toolbox.print.colors.red(
+                      "Ocorreu algum problema com a Cloud!" +
+                        toolbox.print.colors.muted(
+                          " ☁️ Tente novamente mais tarde! Desculpe :<"
+                        )
+                    )
+                  );
+                  process.kill(0);
+                } else if (!res.data.returns.ok) {
+                  spinner3.fail(
+                    toolbox.print.colors.red(
+                      res.data.returns.msg +
+                        toolbox.print.colors.muted(
+                          " ☁️ Tente novamente mais tarde! Desculpe :<"
+                        )
+                    )
+                  );
+                  process.kill(0);
+                } else {
+                  spinner3.fail(
+                    toolbox.print.colors.red(
+                      res.data.msg +
+                        toolbox.print.colors.muted(
+                          " ☁️ Tente novamente mais tarde! Desculpe :<"
+                        )
+                    )
+                  );
+                  process.kill(0);
+                }
               }
-            }
-          });
+            });
+        }
       });
     }, 2000);
   }, 2000);

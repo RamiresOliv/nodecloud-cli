@@ -1,6 +1,7 @@
 const { existsSync, createWriteStream } = require("fs");
 var archiver = require("archiver");
 
+// Selling this product is not allowed.
 exports.readConfigFile = async (toolbox, FilePath) => {
   if (!existsSync(FilePath + "/Cloud.config"))
     return [false, "File don't exists."];

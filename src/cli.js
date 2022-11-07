@@ -2,7 +2,7 @@ const { readdirSync } = require("fs");
 const cli_toolbox = require("gluegun");
 const ejs = require("ejs");
 
-cli_toolbox.print.colors.warning("aaaaaaaaa");
+// Selling this product is not allowed.
 
 // Only Time commands handler
 exports.cli = async (args) => {

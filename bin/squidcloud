@@ -1,8 +1,9 @@
 #!/usr/bin/env node
+// Welcome to the SquidCloud-CLI!
+// Selling this product is not allowed.
 DEBUGGABLE = false; // recomendable no use for spaming reasons
 
 // Childer starter of the CLI.
-console.log(process.argv);
 process.argv[0] = process.cwd(); // Defines where the command called default is node.exe path.
 process.argv[1]; // <- [...]/bin/squidcloud
 process.argv[1] = __dirname.replace("\\", "/") + "/.."; // <- squidcloud-root
