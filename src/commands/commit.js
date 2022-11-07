@@ -18,6 +18,10 @@ exports.run = async (toolbox, args) => {
   SquidApi.api.post.bin
     .getMyProjects(toolbox, token.document)
     .then(async (resGetProjects) => {
+      if (!resGetProjects.data.ok) {
+        toolbox.print.error(toolbox.print.colors.red(resGetProjects.data.msg));
+        process.kill(0);
+      }
       if (resGetProjects.data.returns.total == 0) {
         toolbox.print.error(
           toolbox.print.colors.red(
