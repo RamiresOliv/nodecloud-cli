@@ -1,4 +1,19 @@
-ApiUrl = "http://localhost:2552";
+ApiUrl = "http://localhost:2552"; // default
+
+checkURL = async () => {
+  const r = await require("local-db-express").document.exists(
+    "ApiBaseUrl",
+    "Current"
+  );
+
+  if (r) {
+    const getted = await require("local-db-express").document.get(
+      "ApiBaseUrl",
+      "Current"
+    );
+    ApiUrl = getted.document;
+  }
+};
 
 const db = require("local-db-express");
 
@@ -6,6 +21,7 @@ db.collection.create("Auth");
 
 // Selling this product is not allowed.
 exports.checkAuth = async (toolbox, token) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });

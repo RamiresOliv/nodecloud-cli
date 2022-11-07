@@ -64,9 +64,7 @@ exports.createConfigFile = async (toolbox, Settings, AppPath, CLIPath) => {
     }
   );
   toolbox.filesystem.write(AppPath + "/Cloud.config", result);
-  return {
-    configFileContent: configFileContent,
-  };
+  return;
 };
 
 exports.createProjectZipFile = async (

@@ -1,7 +1,7 @@
 {
-  "name": "@ramiresoliv/squidcloud-cli",
-  "version": "1.6.3",
-  "versionType": "beta",
+  "name": "squidcloud-cli",
+  "version": "1.6.5",
+  "versionType": "alpha",
   "description": "This CLI is used for the SquidCloud possibiliting make everthing remotely!",
   "main": "bin/oops",
   "bin": {
@@ -26,6 +26,7 @@
   "license": "ISC",
   "dependencies": {
     "archiver": "^5.3.1",
+    "axios": "^1.1.3",
     "ejs": "^3.1.8",
     "gluegun": "^5.1.2",
     "local-db-express": "^1.5.2"

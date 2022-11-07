@@ -103,6 +103,20 @@ exports.run = async (toolbox, args) => {
                       )
                     );
                   }
+                } else {
+                  console.log(
+                    toolbox.print.colors.muted(
+                      askPrompt.Project.toUpperCase() +
+                        " LOGS ----------------------------------------------------------------------------------------------------------------------------------"
+                    )
+                  );
+                  console.log(res.added.translated);
+                  console.log(
+                    toolbox.print.colors.muted(
+                      askPrompt.Project.toUpperCase() +
+                        " LOGS END ----------------------------------------------------------------------------------------------------------------------------------"
+                    )
+                  );
                 }
                 process.kill(0);
               } else {

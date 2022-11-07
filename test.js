@@ -1,19 +1,14 @@
-const toolbox = require("gluegun");
-console.log(toolbox.print.colors);
-console.log(toolbox.print.colors.hidden("aaaaaaaa"));
-const run = async () => {
-  // multiple choice
-  const askShoe = {
-    type: "select",
-    name: "shoe",
-    message: "What shoes are you wearing?",
-    choices: ["Clown", "Other"],
-  };
-  // ask a series of questions
-  const questions = [askShoe];
-  const e = await toolbox.prompt.ask(questions);
-  console.log(e);
-  //------------------------------------------------------
-};
+const express = require("express");
 
-run();
+const app = express();
+
+app.listen(2552);
+
+app.post("/do/@me/upload", (req, res) => {
+  console.log("getted");
+  res.send({
+    ok: false,
+    msg: "res.data.message",
+    returns: { ok: true },
+  });
+});

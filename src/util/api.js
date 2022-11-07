@@ -1,6 +1,22 @@
+ApiUrl = "http://localhost:2552"; // default
+
+checkURL = async () => {
+  const r = await require("local-db-express").document.exists(
+    "ApiBaseUrl",
+    "Current"
+  );
+
+  if (r) {
+    const getted = await require("local-db-express").document.get(
+      "ApiBaseUrl",
+      "Current"
+    );
+    ApiUrl = getted.document;
+  }
+};
+
 exports.api = {};
 exports.api.post = {};
-ApiUrl = "http://localhost:2552";
 
 const { createWriteStream, appendFileSync, readFileSync } = require("fs");
 const Tempo = require("./temp");
@@ -33,7 +49,8 @@ exports.api.post.up = async (
   fileName,
   token
 ) => {
-  const api = toolbox.http.create({
+  await checkURL();
+  /*const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
   const result = await api.post(
@@ -45,7 +62,19 @@ exports.api.post.up = async (
         ["fileName"]: fileName,
       },
     }
-  );
+  );*/
+
+  const result = await require("axios")({
+    method: "POST",
+    url: ApiUrl + "/do/@me/upload",
+    data: [require("fs").readFileSync(CompactedProjectPath)],
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+    headers: {
+      ["Token"]: token,
+      ["fileName"]: fileName,
+    },
+  });
   return result;
 };
 
@@ -56,24 +85,28 @@ exports.api.post.commit = async (
   projectName,
   token
 ) => {
-  const api = toolbox.http.create({
+  await checkURL();
+  /*const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
-  const result = await api.post(
-    "/do/@me/commit",
-    [require("fs").readFileSync(CompactedProjectPath)],
-    {
-      headers: {
-        ["Token"]: token,
-        ["fileName"]: fileName,
-        ["projectName"]: projectName,
-      },
-    }
-  );
+  api.post();*/
+  const result = await require("axios")({
+    method: "POST",
+    url: ApiUrl + "/do/@me/commit",
+    data: [require("fs").readFileSync(CompactedProjectPath)],
+    maxContentLength: Infinity,
+    maxBodyLength: Infinity,
+    headers: {
+      ["Token"]: token,
+      ["fileName"]: fileName,
+      ["projectName"]: projectName,
+    },
+  });
   return result;
 };
 
 exports.api.post.delete = async (toolbox, AppName, token) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
@@ -90,6 +123,7 @@ exports.api.post.delete = async (toolbox, AppName, token) => {
 };
 
 exports.api.post.start = async (toolbox, AppName, token) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
@@ -106,6 +140,7 @@ exports.api.post.start = async (toolbox, AppName, token) => {
 };
 
 exports.api.post.logs = async (toolbox, AppName, token) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
@@ -140,6 +175,7 @@ exports.api.post.logs = async (toolbox, AppName, token) => {
 };
 
 exports.api.post.start = async (toolbox, AppName, token) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
@@ -156,6 +192,7 @@ exports.api.post.start = async (toolbox, AppName, token) => {
 };
 
 exports.api.post.stop = async (toolbox, AppName, token) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
@@ -172,6 +209,7 @@ exports.api.post.stop = async (toolbox, AppName, token) => {
 };
 
 exports.api.post.bin.getMyProjects = async (toolbox, token) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
@@ -188,6 +226,7 @@ exports.api.post.bin.getMyProjects = async (toolbox, token) => {
 };
 
 exports.api.post.ping = async (toolbox) => {
+  await checkURL();
   const api = toolbox.http.create({
     baseURL: ApiUrl,
   });
