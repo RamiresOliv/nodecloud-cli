@@ -14,7 +14,7 @@ exports.run = async (toolbox, args) => {
     await database.document.delete("ApiBaseUrl", "Current");
     toolbox.print.info("Cleared API baseUrl. And backed to default.");
   }
-  const { baseurl } = await toolbox.prompt.ask([
+  var { baseurl } = await toolbox.prompt.ask([
     {
       type: "input",
       name: "baseurl",
@@ -29,6 +29,9 @@ exports.run = async (toolbox, args) => {
     process.exit(0);
   }
   const existence = await database.document.exists("ApiBaseUrl", "Current");
+  baseurl = baseurl.split("/");
+  baseurl.pop();
+  baseurl = baseurl.join("/");
   if (existence) {
     await database.document.update("ApiBaseUrl", "Current", () => {
       return baseurl;
