@@ -1,6 +1,6 @@
 {
   "name": "squidcloud-cli",
-  "version": "1.6.8",
+  "version": "1.6.9",
   "versionType": "alpha",
   "description": "This CLI is used for the SquidCloud possibiliting make everthing remotely!",
   "main": "bin/oops",
