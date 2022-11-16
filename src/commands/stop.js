@@ -18,6 +18,14 @@ exports.run = async (toolbox, args) => {
     SquidApi.api.post.bin
       .getMyProjects(toolbox, token.document)
       .then(async (resGetProjects) => {
+        if (!resGetProjects.data) {
+          toolbox.print.error(
+            toolbox.print.colors.red(
+              "Oops! Parece que aconteceu algum problema em tentar entrar em contato com a API!"
+            )
+          );
+          process.kill(0);
+        }
         if (!resGetProjects.data.ok) {
           toolbox.print.error(
             toolbox.print.colors.red(resGetProjects.data.msg)

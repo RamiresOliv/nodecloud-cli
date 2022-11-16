@@ -16,7 +16,7 @@ exports.run = async (_toolbox, args) => {
         aliases += alias + " ";
       });
     } else {
-      aliases = "N / A";
+      aliases = "";
     }
 
     tableItens.push([

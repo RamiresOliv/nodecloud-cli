@@ -29,9 +29,9 @@ exports.run = async (toolbox, args) => {
     process.exit(0);
   }
   const existence = await database.document.exists("ApiBaseUrl", "Current");
-  baseurl = baseurl.split("/");
+  baseurl = baseurl.split(".io");
   baseurl.pop();
-  baseurl = baseurl.join("/");
+  baseurl = baseurl.join(".io") + ".io";
   if (existence) {
     await database.document.update("ApiBaseUrl", "Current", () => {
       return baseurl;

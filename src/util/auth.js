@@ -50,6 +50,11 @@ exports.registerNewToken = async (toolbox, token) => {
   if (ok) {
     if (data.exists) {
       const existence = await db.document.exists("Auth", "MyToken");
+      await db.document.add(
+        "Auth",
+        "NoEdit",
+        "Se caso queira editar o seu token faça no comando 'squidcloud login'!"
+      );
       if (existence) {
         db.document.update("Auth", "MyToken", (oldValue) => {
           return token;
