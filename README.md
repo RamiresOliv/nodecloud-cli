@@ -2,6 +2,8 @@
 
 > Sua host quando o asunto é um bom lugar para hospedar suas aplicações!
 
+Projeto feito apenas para diversão e testes então é isso. Não está e provavelmente nunca estará 100% completo para uso publico :( Por que de qualquer jeito precisaria de um lugar que o servidor rodasse..
+
 ## CLI. Resumo
 
 Instalação: `npm install -g squidcloud-cli`.
