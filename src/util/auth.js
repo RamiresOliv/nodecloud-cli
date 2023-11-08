@@ -53,7 +53,7 @@ exports.registerNewToken = async (toolbox, token) => {
       await db.document.add(
         "Auth",
         "NoEdit",
-        "Se caso queira editar o seu token faça no comando 'squidcloud login'!"
+        "Se caso queira editar o seu token faça no comando 'nodecloud login'!"
       );
       if (existence) {
         db.document.update("Auth", "MyToken", (oldValue) => {

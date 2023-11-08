@@ -1,4 +1,4 @@
 {
   "global": { "datastorage_folder": "./src/database/" },
-  "exportation": { "export_folder": "base", "file_type": ".db" }
+  "exportation": { "export_folder": "base", "file_type": ".json" }
 }

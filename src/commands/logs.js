@@ -17,7 +17,7 @@ exports.run = async (toolbox, args) => {
         toolbox.print.colors.red(
           "Falha , [NÃO AUTORIZADO] Você precisa fazer login com seu API Token. " +
             toolbox.print.colors.yellow(
-              'Use "squidcloud login" para efetuar seu login!'
+              'Use "nodecloud login" para efetuar seu login!'
             )
         )
       );

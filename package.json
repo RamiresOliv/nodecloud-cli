@@ -1,15 +1,15 @@
 {
-  "name": "squidcloud-cli",
-  "version": "1.6.9",
+  "name": "nodecloud-cli",
+  "version": "1.8.4",
   "versionType": "alpha",
-  "description": "This CLI is used for the SquidCloud possibiliting make everthing remotely!",
+  "description": "This CLI is used for the nodecloud possibiliting make everthing remotely!",
   "main": "bin/oops",
   "bin": {
-    "@ramiresoliv/squidcloudcli": "bin/squidcloud",
-    "squid-cloud": "bin/squidcloud",
-    "scc": "bin/squidcloud",
-    "squidcloud": "bin/squidcloud",
-    "squid-cloud-cli": "bin/squidcloud"
+    "@ramiresoliv/nodecloudcli": "bin/nodecloud",
+    "node-cloud": "bin/nodecloud",
+    "nc": "bin/nodecloud",
+    "nodecloud": "bin/nodecloud",
+    "node-cloud-cli": "bin/nodecloud"
   },
   "publishConfig": {
     "access": "public"
@@ -19,8 +19,8 @@
   },
   "keywords": [
     "cli",
-    "squidcloud",
-    "squidcloud-cli"
+    "nodecloud",
+    "nodecloud-cli"
   ],
   "author": "RamiresOliv",
   "license": "ISC",

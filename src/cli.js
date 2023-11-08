@@ -34,9 +34,9 @@ exports.cli = async (args) => {
   // run cmd/find commands
   if (!args[2]) {
     cli_toolbox.print.highlight(`Olá! Sejá bem vindo(a) ao Squid Cloud!`);
-    cli_toolbox.print.muted(`Para começar use "squidcloud help"`);
+    cli_toolbox.print.muted(`Para começar use "nodecloud help"`);
     cli_toolbox.print.muted(
-      `Squidcloud V` +
+      `nodecloud V` +
         require("../package.json").version +
         "-" +
         require("../package.json").versionType.toUpperCase()
@@ -63,7 +63,7 @@ exports.cli = async (args) => {
   }
   if (!found) {
     cli_toolbox.print.error(`O comando "${command}" não foi achado.`);
-    cli_toolbox.print.warning(`Para consultar comandos use "squidcloud help"`);
+    cli_toolbox.print.warning(`Para consultar comandos use "nodecloud help"`);
     return "err-cmdNotFound-404";
   }
 

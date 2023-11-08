@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-require("gluegun").print.warning("Warning: The CLI needs to be installed globally 'npm i -g squidcloud-cli' and cannot be called by requires!");
+require("gluegun").print.warning(
+  "Warning: The CLI needs to be installed globally 'npm i -g nodecloud-cli' and cannot be called by requires!"
+);

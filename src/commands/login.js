@@ -11,7 +11,7 @@ exports.run = async (toolbox, args) => {
     },
   ]);
   const confirmation = await toolbox.prompt.confirm(
-    "Você tem que quer se conectar a SquidCloud com esse token?",
+    "Você tem que quer se conectar a nodecloud com esse token?",
     true
   );
 

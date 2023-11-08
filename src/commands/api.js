@@ -18,28 +18,25 @@ exports.run = async (toolbox, args) => {
     {
       type: "input",
       name: "baseurl",
-      message: "Porfavor digite aqui o novo baseURL da API da SquidCloud",
+      message: "Porfavor digite aqui o novo baseURL da API da nodecloud",
     },
   ]);
-  console.log(baseurl.startsWith("https://"));
-  if (!baseurl.startsWith("https://")) {
+  if (baseurl.startsWith("http://") || baseurl.startsWith("https://")) {
+    const existence = await database.document.exists("ApiBaseUrl", "Current");
+    if (existence) {
+      await database.document.update("ApiBaseUrl", "Current", () => {
+        return baseurl;
+      });
+    } else {
+      await database.document.add("ApiBaseUrl", "Current", baseurl);
+    }
+    toolbox.print.info("Added new API baseUrl!");
+  } else {
     toolbox.print.error(
-      "O URL da API precisa ser um URL Válido! com https! Ex: 'https://github.com'"
+      "O URL da API precisa ser um URL Válido! com https! Ex: 'https://github.com'/'http://localhost:25565'"
     );
     process.exit(0);
   }
-  const existence = await database.document.exists("ApiBaseUrl", "Current");
-  baseurl = baseurl.split(".io");
-  baseurl.pop();
-  baseurl = baseurl.join(".io") + ".io";
-  if (existence) {
-    await database.document.update("ApiBaseUrl", "Current", () => {
-      return baseurl;
-    });
-  } else {
-    await database.document.add("ApiBaseUrl", "Current", baseurl);
-  }
-  toolbox.print.info("Added new API baseUrl!");
 };
 
 exports.config = {

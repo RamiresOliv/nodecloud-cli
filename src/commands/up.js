@@ -29,7 +29,7 @@ exports.run = async (toolbox, args) => {
       toolbox.print.colors.red(
         "Falha , [NÃO AUTORIZADO] Você precisa fazer login com seu API Token. " +
           toolbox.print.colors.yellow(
-            'Use "squidcloud login" para efetuar seu login!'
+            'Use "nodecloud login" para efetuar seu login!'
           )
       )
     );
@@ -48,14 +48,6 @@ exports.run = async (toolbox, args) => {
       }
       if (!resGetProjects.data.ok) {
         spinner1.fail(toolbox.print.colors.red(resGetProjects.data.msg));
-        process.kill(0);
-      }
-      if (resGetProjects.data.returns.total == 0) {
-        spinner1.fail(
-          toolbox.print.colors.red(
-            "Você ainda não tem nenhuma aplicação na Cloud."
-          )
-        );
         process.kill(0);
       }
       spinner1.text = toolbox.print.colors.cyan(
