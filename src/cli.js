@@ -33,7 +33,7 @@ exports.cli = async (args) => {
 
   // run cmd/find commands
   if (!args[2]) {
-    cli_toolbox.print.highlight(`Olá! Sejá bem vindo(a) ao Squid Cloud!`);
+    cli_toolbox.print.highlight(`Olá! Sejá bem vindo(a) ao NodeCloud!`);
     cli_toolbox.print.muted(`Para começar use "nodecloud help"`);
     cli_toolbox.print.muted(
       `nodecloud V` +

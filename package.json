@@ -1,6 +1,6 @@
 {
   "name": "nodecloud-cli",
-  "version": "1.8.4",
+  "version": "1.8.5",
   "versionType": "alpha",
   "description": "This CLI is used for the nodecloud possibiliting make everthing remotely!",
   "main": "bin/oops",
