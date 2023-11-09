@@ -36,7 +36,15 @@ exports.cli = async (args) => {
     cli_toolbox.print.highlight(`Olá! Sejá bem vindo(a) ao NodeCloud!`);
     cli_toolbox.print.muted(`Para começar use "nodecloud help"`);
     cli_toolbox.print.muted(
-      `nodecloud V` +
+      `nodecloud-cli V` +
+        require("../package.json").version +
+        "-" +
+        require("../package.json").versionType.toUpperCase()
+    );
+    return "warn-cmdNoExpecified-???";
+  } else if (args[2].toLowerCase() == "-v" || args[2].toLowerCase() == "--v") {
+    console.log(
+      `nodecloud-cli V` +
         require("../package.json").version +
         "-" +
         require("../package.json").versionType.toUpperCase()
