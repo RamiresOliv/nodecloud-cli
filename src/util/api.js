@@ -39,6 +39,7 @@ exports.api.post = {
 };
 
 exports.api.post.bin = {
+  getProjectInfo: Function,
   getMyProjects: Function,
 };
 
@@ -216,6 +217,23 @@ exports.api.post.bin.getMyProjects = async (toolbox, token) => {
   const result = await api.post(
     "/do/@me/getProjects",
     {},
+    {
+      headers: {
+        ["Token"]: token,
+      },
+    }
+  );
+  return result;
+};
+
+exports.api.post.bin.getProjectInfo = async (toolbox, AppName, token) => {
+  await checkURL();
+  const api = toolbox.http.create({
+    baseURL: ApiUrl,
+  });
+  const result = await api.post(
+    "/do/@me/getProjectInfo",
+    { appname: AppName },
     {
       headers: {
         ["Token"]: token,

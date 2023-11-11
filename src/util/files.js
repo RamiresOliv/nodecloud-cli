@@ -58,7 +58,7 @@ exports.createConfigFile = async (toolbox, Settings, AppPath, CLIPath) => {
     toolbox.filesystem.read(CLIPath + "/src/templates/Cloud.config.ejs"),
     {
       Name: Settings[0],
-      Id: "",
+      Id: Math.floor(Math.random() * 154315643734567674577564722 + 1),
       Starter: Settings[1],
       Ignoreds: "[]",
     }

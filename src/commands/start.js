@@ -1,7 +1,7 @@
 const { FileWorker, Authentification, Tempo, SquidApi } = require("../util");
 
 exports.run = async (toolbox, args) => {
-  toolbox.print.info(toolbox.print.colors.dim("Processo: Start"));
+  toolbox.print.info(`Processo: Start ${args[3] ? args[3] : ""}`);
 
   setTimeout(async () => {
     const { ok, token } = await Authentification.getAuth(toolbox);
@@ -40,13 +40,24 @@ exports.run = async (toolbox, args) => {
           );
           process.kill(0);
         }
-        const askProjects = {
-          type: "select",
-          name: "Project",
-          message: "Qual o seu projeto que você deseja ser ativado?",
-          choices: resGetProjects.data.returns.returns,
-        };
-        const askPrompt = await toolbox.prompt.ask([askProjects]);
+
+        let projectName =
+          "nome impossivel de ser colocado por culpa dos espaços.";
+        if (args[3] == null) {
+          const askProjects = {
+            type: "select",
+            name: "Project",
+            message: "Qual o seu projeto que você deseja ser ativado?",
+            choices: resGetProjects.data.returns.returns,
+          };
+          const askPrompt = await toolbox.prompt.ask([askProjects]);
+          projectName = askPrompt.Project;
+        } else {
+          projectName = args[3];
+          toolbox.print.success(
+            "√ Aplicação: " + toolbox.print.colors.cyan(args[3])
+          );
+        }
 
         const spinner1 = new toolbox.print.spin(
           toolbox.print.colors.cyan(
@@ -56,9 +67,10 @@ exports.run = async (toolbox, args) => {
               )
           )
         );
+
         setTimeout(async () => {
           SquidApi.api.post
-            .start(toolbox, askPrompt.Project, token.document)
+            .start(toolbox, projectName, token.document)
             .then((res) => {
               if (res.data.returns && res.data.returns.ok) {
                 spinner1.succeed(

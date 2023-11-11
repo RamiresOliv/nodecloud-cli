@@ -14,12 +14,28 @@ exports.run = async (toolbox, args) => {
   const loading = toolbox.print.spin("Aguarde...");
   if (confirmation) {
     child = exec("npm update -g " + require("../../package.json").name);
+    let err = "";
+    child.stderr.on("data", (data) => {
+      err += data;
+    });
     child.on("exit", function (code, signal) {
       if (code != 0) {
-        loading.fail(
-          toolbox.print.colors.red(`FAIL: code-${code}, signal:${signal}`)
+        loading.fail(toolbox.print.colors.red(`FAIL: code: ${code}`));
+        toolbox.print.error(err);
+      } else {
+        loading.succeed(
+          toolbox.print.colors.green(
+            "Update finalizado! Agora a CLI deve estar atualizada na versão mais recente."
+          )
         );
-      } else loading.succeed(toolbox.print.colors.green("Update finalizado! Agora a CLI deve estar atualizada na versão mais recente."));
+        toolbox.print.info(
+          `Tente ${toolbox.print.colors.yellow(
+            "nodecloud"
+          )} ${toolbox.print.colors.muted(
+            "-v"
+          )} para conferir qual a versão da CLI que você está usando!`
+        );
+      }
       process.kill(0);
     });
   } else {

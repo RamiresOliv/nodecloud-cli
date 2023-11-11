@@ -40,7 +40,7 @@ exports.run = async (toolbox, args) => {
 };
 
 exports.config = {
-  name: "api",
+  name: "baseurl",
   description: "Changes the API baseURL.",
-  aliases: ["https", "baseurl"],
+  aliases: ["bu", "https", "api"],
 };

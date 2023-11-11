@@ -40,4 +40,5 @@ exports.run = async (toolbox, args) => {
 exports.config = {
   name: "login",
   description: "Uses a API Token for executes commands in CLI.",
+  aliases: ["l", "tk", "token"],
 };
