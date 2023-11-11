@@ -43,7 +43,6 @@ exports.checkRequiredFiles = async (toolbox, path) => {
   if (r.data[0] == false && r.data[1] == "500") {
     return [false, 500];
   }
-  console.log(r.return);
   if (!existsSync(path + "/cloud.config")) return [false, 404, "cloud.config"];
   if (
     r.return.LANGUAGE.toLowerCase() == "node.js" &&
