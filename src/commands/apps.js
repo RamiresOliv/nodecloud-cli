@@ -67,7 +67,7 @@ exports.run = async (toolbox, args) => {
             SquidApi.api.post.bin
               .getProjectInfo(toolbox, value, token.document)
               .then(async (res) => {
-                if (res.data.ok) {
+                if (!res || res.data.ok) {
                   let line = "";
                   line += toolbox.print.colors.cyan(value + ":") + "\n";
                   let status = toolbox.print.colors.red("OFFLINE");
