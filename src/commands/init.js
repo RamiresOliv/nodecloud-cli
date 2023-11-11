@@ -59,7 +59,7 @@ exports.run = async (toolbox, args) => {
     );
     process.kill(0);
   }
-  const { name, language, mainSelect } = await toolbox.prompt.ask([
+  let { name, language, mainSelect } = await toolbox.prompt.ask([
     {
       type: "input",
       name: "name",
@@ -97,6 +97,9 @@ exports.run = async (toolbox, args) => {
       )
     );
     process.kill(0);
+  }
+  if (mainSelect == "") {
+    mainSelect = defaultConfigs.main[language];
   }
   var main = mainSelect;
   if (!mainSelect.endsWith("." + resume[language])) {
