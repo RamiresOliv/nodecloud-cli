@@ -5,7 +5,18 @@ const {
   SquidApi,
   Exec,
 } = require("../util");
-const { spawn } = require("child_process");
+
+function formatBytes(bytes, decimals = 2) {
+  if (!+bytes) return "0 Bytes";
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
+
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
 
 exports.run = async (toolbox, args) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: AppInfo"));
@@ -68,12 +79,12 @@ exports.run = async (toolbox, args) => {
                     status = toolbox.print.colors.green("ONLINE");
                   line += status;
                   line += ` | Tamanho: ${toolbox.print.colors.muted(
-                    `"` + res.data.return.returns.projectInfos.size + `MB"`
+                    `"` + res.data.return.returns.projectInfos.size + `"`
                   )}`;
                   const pid = res.data.return.returns.projectInfos.pidGets;
                   if (pid) {
                     line += ` | Memória: ${toolbox.print.colors.muted(
-                      `"` + pid.memory + `MB"`
+                      `"` + formatBytes(pid.memory) + `"`
                     )}`;
                     line += ` | Tempo ligado: ${toolbox.print.colors.muted(
                       `"` + pid.elapsed + `"`

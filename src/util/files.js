@@ -2,13 +2,18 @@ const { existsSync, createWriteStream } = require("fs");
 var archiver = require("archiver");
 
 // Selling this product is not allowed.
+exports.fileExists = (toolbox, Path, Name) => {
+  r = existsSync(Path + "/" + Name);
+  return r;
+};
+
 exports.readConfigFile = async (toolbox, FilePath) => {
-  if (!existsSync(FilePath + "/Cloud.config"))
+  if (!existsSync(FilePath + "/cloud.config"))
     return [false, "File don't exists."];
   try {
     function readCloudConf(path = ".") {
       path = path.replace(/(\\|\/)$/, "");
-      return toolbox.filesystem.read(FilePath + "/Cloud.config");
+      return toolbox.filesystem.read(FilePath + "/cloud.config");
     }
     const readded = Object.fromEntries(
       readCloudConf()
@@ -27,21 +32,28 @@ exports.readConfigFile = async (toolbox, FilePath) => {
             item[i] = item[i].replace('"', "").replace('"', "");
         }
     }
-    return [true, "success", readded];
+    return { data: [true, "success"], return: readded };
   } catch (err) {
     return [false, "500"];
   }
 };
 
 exports.checkRequiredFiles = async (toolbox, path) => {
-  if (!existsSync(path + "/Cloud.config")) return [false, 404, "Cloud.config"];
-  if (!existsSync(path + "/package.json")) return [false, 404, "package.json"];
-
   const r = await exports.readConfigFile(toolbox, path);
   if (r[0] == false && r[1] == "500") {
     return [false, 500];
   }
-  if (r[2].NAME == null || r[2].START == null || r[2].IGNOREDS == null) {
+
+  if (!existsSync(path + "/cloud.config")) return [false, 404, "cloud.config"];
+  if (!existsSync(path + "/package.json")) return [false, 404, "package.json"];
+  if (r[2].LANGUAGE.toLowerCase() == "python" && path + "/requirements.txt")
+    return [false, 404, "requirements.txt"];
+  if (
+    r[2].NAME == null ||
+    r[2].LANGUAGE == null ||
+    r[2].START == null ||
+    r[2].IGNOREDS == null
+  ) {
     return [false, 400];
   }
 
@@ -49,21 +61,17 @@ exports.checkRequiredFiles = async (toolbox, path) => {
 };
 
 exports.createConfigFile = async (toolbox, Settings, AppPath, CLIPath) => {
-  if (Settings[1] == "") {
-    Settings[1] = "index.js";
-  } else if (!Settings[1].endsWith(".js")) {
-    Settings[1] = Settings[1] + ".js";
-  }
   const result = await toolbox.EJS.render(
-    toolbox.filesystem.read(CLIPath + "/src/templates/Cloud.config.ejs"),
+    toolbox.filesystem.read(CLIPath + "/src/templates/cloud.config.ejs"),
     {
-      Name: Settings[0],
-      Id: Math.floor(Math.random() * 154315643734567674577564722 + 1),
-      Starter: Settings[1],
+      Name: Settings.name,
+      Language: Settings.lan,
+      Starter: Settings.main,
+      Id: "N/A",
       Ignoreds: "[]",
     }
   );
-  toolbox.filesystem.write(AppPath + "/Cloud.config", result);
+  toolbox.filesystem.write(AppPath + "/cloud.config", result);
   return;
 };
 
@@ -80,7 +88,11 @@ exports.createProjectZipFile = async (
     throw err;
   });
 
-  archive.directory(toZipPath, false);
+  archive.glob("**/*", {
+    cwd: toZipPath,
+    ignore: ["node_modules/**", "package-lock.json"],
+  });
+
   archive.pipe(outputFile);
   archive.finalize();
   return {

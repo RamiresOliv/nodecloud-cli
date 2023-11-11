@@ -1,3 +1,0 @@
-title ass
-start ..
-exit

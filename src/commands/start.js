@@ -129,5 +129,5 @@ exports.run = async (toolbox, args) => {
 exports.config = {
   name: "start",
   description: "Start remotly a application in Cloud.",
-  aliases: ["i", "iniciar"],
+  aliases: ["s", "iniciar"],
 };

@@ -1,11 +1,11 @@
 {
   "name": "nodecloud-cli",
-  "version": "1.9.5",
+  "version": "2.0.3",
   "versionType": "alpha",
   "description": "This CLI is used for the nodecloud possibiliting make everthing remotely!",
   "main": "bin/nodecloud",
   "bin": {
-    "@ramiresoliv/nodecloudcli": "bin/nodecloud",
+    "nodecloudcli": "bin/nodecloud",
     "node-cloud": "bin/nodecloud",
     "nc": "bin/nodecloud",
     "nodecloud": "bin/nodecloud",
@@ -30,5 +30,9 @@
     "ejs": "^3.1.8",
     "gluegun": "^5.1.2",
     "local-db-express": "^1.5.2"
-  }
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "devDependencies": {}
 }
