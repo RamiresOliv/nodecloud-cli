@@ -46,10 +46,10 @@ exports.run = async (toolbox, args) => {
       };
       const askPrompt = await toolbox.prompt.ask([askProjects]);
       const e = await FileWorker.readConfigFile(toolbox, args[0]);
-      if (e[0] && e[2].IGNOREDS[0])
+      if (e.data[0] && e.return.IGNOREDS[0])
         toolbox.print.warning(
           "⚠️ Atenção os arquivos que estão no Ignoreds são: [" +
-            e[2].IGNOREDS.toString() +
+            e.return.IGNOREDS.toString() +
             "]"
         );
       const spinner1 = new toolbox.print.spin(

@@ -93,7 +93,7 @@ exports.run = async (toolbox, args) => {
           toolbox,
           args[0],
           Tempo.upload,
-          checkin[2].NAME
+          checkin.return.NAME
         );
 
         zipR.Filer.on("close", async () => {

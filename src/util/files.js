@@ -40,19 +40,26 @@ exports.readConfigFile = async (toolbox, FilePath) => {
 
 exports.checkRequiredFiles = async (toolbox, path) => {
   const r = await exports.readConfigFile(toolbox, path);
-  if (r[0] == false && r[1] == "500") {
+  if (r.data[0] == false && r.data[1] == "500") {
     return [false, 500];
   }
-
+  console.log(r.return);
   if (!existsSync(path + "/cloud.config")) return [false, 404, "cloud.config"];
-  if (!existsSync(path + "/package.json")) return [false, 404, "package.json"];
-  if (r[2].LANGUAGE.toLowerCase() == "python" && path + "/requirements.txt")
+  if (
+    r.return.LANGUAGE.toLowerCase() == "node.js" &&
+    !existsSync(path + "/package.json")
+  )
+    return [false, 404, "package.json"];
+  if (
+    r.return.LANGUAGE.toLowerCase() == "python" &&
+    !existsSync(path + "/requirements.txt")
+  )
     return [false, 404, "requirements.txt"];
   if (
-    r[2].NAME == null ||
-    r[2].LANGUAGE == null ||
-    r[2].START == null ||
-    r[2].IGNOREDS == null
+    r.return.NAME == null ||
+    r.return.LANGUAGE == null ||
+    r.return.START == null ||
+    r.return.IGNOREDS == null
   ) {
     return [false, 400];
   }
