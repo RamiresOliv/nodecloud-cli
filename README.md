@@ -1,4 +1,4 @@
-# Bem vindo(a) a nodecloud-CLI!
+# Bem vindo(a) a NodeCloud-CLI!
 
 > Sua host quando o asunto é um bom lugar para hospedar suas aplicações!
 

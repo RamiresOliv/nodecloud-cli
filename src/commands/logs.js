@@ -59,7 +59,7 @@ exports.run = async (toolbox, args) => {
           toolbox.print.colors.cyan(
             "Continuando trabalho na Cloud..." +
               toolbox.print.colors.muted(
-                " ☁️ Agora é só relaxar, nós cuidamos disso!  "
+                " ☁️ Agora é só relaxar, nós cuidamos disso!"
               )
           )
         );
@@ -72,7 +72,7 @@ exports.run = async (toolbox, args) => {
                   toolbox.print.colors.green(
                     "Continuando trabalho na Cloud..." +
                       toolbox.print.colors.muted(
-                        " ☁️ Agora é só relaxar, nós cuidamos disso!  "
+                        " ☁️ Agora é só relaxar, nós cuidamos disso!"
                       )
                   )
                 );
@@ -105,30 +105,26 @@ exports.run = async (toolbox, args) => {
                   } else {
                     console.log(
                       toolbox.print.colors.muted(
-                        askPrompt.Project.toUpperCase() +
-                          " LOGS ----------------------------------------------------------------------------------------------------------------------------------"
+                        askPrompt.Project.toUpperCase() + " LOGS ---------"
                       )
                     );
                     console.log(res.added.translated);
                     console.log(
                       toolbox.print.colors.muted(
-                        askPrompt.Project.toUpperCase() +
-                          " LOGS END ----------------------------------------------------------------------------------------------------------------------------------"
+                        askPrompt.Project.toUpperCase() + " LOGS END ---------"
                       )
                     );
                   }
                 } else {
                   console.log(
                     toolbox.print.colors.muted(
-                      askPrompt.Project.toUpperCase() +
-                        " LOGS ----------------------------------------------------------------------------------------------------------------------------------"
+                      askPrompt.Project.toUpperCase() + " LOGS ---------"
                     )
                   );
                   console.log(res.added.translated);
                   console.log(
                     toolbox.print.colors.muted(
-                      askPrompt.Project.toUpperCase() +
-                        " LOGS END ----------------------------------------------------------------------------------------------------------------------------------"
+                      askPrompt.Project.toUpperCase() + " LOGS END ---------"
                     )
                   );
                 }
