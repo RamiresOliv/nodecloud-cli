@@ -1,7 +1,7 @@
 const { FileWorker, NodeCloudApi } = require("../util");
 
 const defaultConfigs = {
-  name: "MyCoolApp",
+  name: "mycoolapp",
   language: "node.js",
   main: { default: "index.js", ["node.js"]: "index.js", ["python"]: "main.py" },
 };
@@ -37,7 +37,7 @@ exports.run = async (toolbox, args) => {
     await FileWorker.createConfigFile(
       toolbox,
       {
-        name: defaultConfigs.name,
+        name: defaultConfigs.name.toLowerCase(),
         lan: language,
         version: versionToSend,
         main: defaultConfigs.main[language],
@@ -67,7 +67,7 @@ exports.run = async (toolbox, args) => {
     await FileWorker.createConfigFile(
       toolbox,
       {
-        name: defaultConfigs.name,
+        name: defaultConfigs.name.toLowerCase(),
         lan: languageToGo,
         version: versionToSend,
         main: defaultConfigs.main[languageToGo],
@@ -151,7 +151,7 @@ exports.run = async (toolbox, args) => {
   setTimeout(() => {
     FileWorker.createConfigFile(
       toolbox,
-      { name: name, lan: language, main: main, version: version }, // 1 2 3
+      { name: name.toLowerCase(), lan: language, main: main, version: version }, // 1 2 3
       args[0],
       args[1]
     ).then((ok, data) => {

@@ -106,7 +106,7 @@ exports.api.post.commit = async (
     headers: {
       ["Token"]: token,
       ["fileName"]: fileName,
-      ["projectName"]: projectName,
+      ["projectName"]: projectName.toLowerCase(),
     },
   });
   return result;
@@ -119,7 +119,7 @@ exports.api.post.delete = async (toolbox, AppName, token) => {
   });
   const result = api.post(
     "/do/@me/delete",
-    { appname: AppName },
+    { appname: AppName.toLowerCase() },
     {
       headers: {
         ["Token"]: token,
@@ -136,7 +136,7 @@ exports.api.post.start = async (toolbox, AppName, token) => {
   });
   const result = api.post(
     "/do/@me/start",
-    { appname: AppName },
+    { appname: AppName.toLowerCase() },
     {
       headers: {
         ["Token"]: token,
@@ -153,7 +153,7 @@ exports.api.post.logs = async (toolbox, AppName, token) => {
   });
   const result = await api.post(
     "/do/@me/getLogs",
-    { appname: AppName },
+    { appname: AppName.toLowerCase() },
     {
       headers: {
         ["Token"]: token,
@@ -191,7 +191,7 @@ exports.api.post.start = async (toolbox, AppName, token) => {
   });
   const result = api.post(
     "/do/@me/start",
-    { appname: AppName },
+    { appname: AppName.toLowerCase() },
     {
       headers: {
         ["Token"]: token,
@@ -208,7 +208,7 @@ exports.api.post.stop = async (toolbox, AppName, token) => {
   });
   const result = api.post(
     "/do/@me/stop",
-    { appname: AppName },
+    { appname: AppName.toLowerCase() },
     {
       headers: {
         ["Token"]: token,
@@ -242,7 +242,7 @@ exports.api.post.bin.getProjectInfo = async (toolbox, AppName, token) => {
   });
   const result = await api.post(
     "/do/@me/getProjectInfo",
-    { appname: AppName },
+    { appname: AppName.toLowerCase() },
     {
       headers: {
         ["Token"]: token,
