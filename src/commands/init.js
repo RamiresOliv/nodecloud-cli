@@ -144,7 +144,7 @@ exports.run = async (toolbox, args) => {
       gettedVersion = res.data[0].version.replace("v", "");
     } else {
       res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
-      gettedVersion = res.data[0]["latest"];
+      gettedVersion = res.data[1]["latest"];
     }
     version = gettedVersion;
   }
