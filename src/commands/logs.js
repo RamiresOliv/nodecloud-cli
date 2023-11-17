@@ -2,10 +2,11 @@ const {
   FileWorker,
   Authentification,
   Tempo,
-  SquidApi,
+  NodeCloudApi,
   Exec,
 } = require("../util");
-const { spawn } = require("child_process");
+const { appendFileSync } = require("fs");
+const { exec } = require("child_process");
 
 exports.run = async (toolbox, args) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Logs"));
@@ -22,7 +23,7 @@ exports.run = async (toolbox, args) => {
         )
       );
     }
-    SquidApi.api.post.bin
+    NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
       .then(async (resGetProjects) => {
         if (!resGetProjects.data) {
@@ -39,7 +40,7 @@ exports.run = async (toolbox, args) => {
           );
           process.kill(0);
         }
-        if (resGetProjects.data.returns.total == 0) {
+        if (resGetProjects.data.total == 0) {
           toolbox.print.error(
             toolbox.print.colors.red(
               "Você ainda não tem nenhuma aplicação na Cloud."
@@ -51,7 +52,7 @@ exports.run = async (toolbox, args) => {
           type: "select",
           name: "Project",
           message: "Qual o seu projeto que você deseja ver o terminal?",
-          choices: resGetProjects.data.returns.returns,
+          choices: resGetProjects.data.returns,
         };
         const askPrompt = await toolbox.prompt.ask([askProjects]);
 
@@ -64,7 +65,7 @@ exports.run = async (toolbox, args) => {
           )
         );
         setTimeout(async () => {
-          SquidApi.api.post
+          NodeCloudApi.api.post
             .logs(toolbox, askPrompt.Project, token.document)
             .then(async (res) => {
               if (res.data.ok) {
@@ -96,7 +97,19 @@ exports.run = async (toolbox, args) => {
                     true
                   );
                   if (confirmation) {
-                    await Exec.openTXTFile(res.added.txtPath);
+                    var type = "open " + res.added.txtPath;
+                    if (process.platform == "win32") {
+                      type = "c:\\windows\\notepad.exe " + res.added.txtPath;
+                    }
+
+                    const a = exec(type);
+
+                    a.stdout.on("data", (a) => {
+                      console.log(a);
+                    });
+                    a.on("close", (a) => {
+                      process.kill(0);
+                    });
                     console.log(
                       toolbox.print.colors.muted(
                         res.added.logPath.replace(`\\`, "/")
@@ -114,6 +127,7 @@ exports.run = async (toolbox, args) => {
                         askPrompt.Project.toUpperCase() + " LOGS END ---------"
                       )
                     );
+                    process.kill(0);
                   }
                 } else {
                   console.log(
@@ -127,8 +141,8 @@ exports.run = async (toolbox, args) => {
                       askPrompt.Project.toUpperCase() + " LOGS END ---------"
                     )
                   );
+                  process.kill(0);
                 }
-                process.kill(0);
               } else {
                 if (res.data.errcode == 500) {
                   spinner1.fail(
@@ -143,7 +157,7 @@ exports.run = async (toolbox, args) => {
                   /*} else if (!res.data.ok) {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.returns.msg +
+                      res.data.msg +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )

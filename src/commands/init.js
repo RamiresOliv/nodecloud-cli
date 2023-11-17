@@ -1,4 +1,4 @@
-const { FileWorker } = require("../util");
+const { FileWorker, NodeCloudApi } = require("../util");
 
 const defaultConfigs = {
   name: "MyCoolApp",
@@ -26,17 +26,29 @@ exports.run = async (toolbox, args) => {
         choices: ["python", "node.js"],
       },
     ]);
-
-    return FileWorker.createConfigFile(
+    var versionToSend;
+    if (language == "node.js") {
+      res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
+      versionToSend = res.data[0].version.replace("v", "");
+    } else {
+      res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
+      versionToSend = res.data[0]["latest"];
+    }
+    await FileWorker.createConfigFile(
       toolbox,
       {
         name: defaultConfigs.name,
         lan: language,
+        version: versionToSend,
         main: defaultConfigs.main[language],
       }, // 1 2 3
       args[0],
       args[1]
     );
+    toolbox.print.info(
+      toolbox.print.colors.green("Created: " + args[0] + "\\" + "cloud.config")
+    );
+    return process.kill(0);
   } else if (args[3] == "-y") {
     var languageToGo;
     if (FileWorker.fileExists(toolbox, args[0], "main.py")) {
@@ -44,11 +56,20 @@ exports.run = async (toolbox, args) => {
     } else {
       languageToGo = defaultConfigs.language;
     }
+    var versionToSend;
+    if (languageToGo == "node.js") {
+      res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
+      versionToSend = res.data[0].version.replace("v", "");
+    } else {
+      res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
+      versionToSend = res.data[0]["latest"];
+    }
     await FileWorker.createConfigFile(
       toolbox,
       {
         name: defaultConfigs.name,
         lan: languageToGo,
+        version: versionToSend,
         main: defaultConfigs.main[languageToGo],
       }, // 1 2 3
       args[0],
@@ -57,9 +78,9 @@ exports.run = async (toolbox, args) => {
     toolbox.print.info(
       toolbox.print.colors.green("Created: " + args[0] + "\\" + "cloud.config")
     );
-    process.kill(0);
+    return process.kill(0);
   }
-  let { name, language, mainSelect } = await toolbox.prompt.ask([
+  let { name, language } = await toolbox.prompt.ask([
     {
       type: "input",
       name: "name",
@@ -71,6 +92,16 @@ exports.run = async (toolbox, args) => {
       message:
         "Porfavor informe qual tipo de linguagem essa aplicação vai usar.",
       choices: ["node.js", "python"],
+    },
+  ]);
+  let { version, mainSelect } = await toolbox.prompt.ask([
+    {
+      type: "input",
+      name: "version",
+      message:
+        "Porfavor informe qual a versão do " +
+        language +
+        " sua aplicação vai usar. (ex: 20) (deixe em branco para a versão mais recente)",
     },
     {
       type: "input",
@@ -105,10 +136,22 @@ exports.run = async (toolbox, args) => {
   if (!mainSelect.endsWith("." + resume[language])) {
     main = mainSelect + "." + resume[language];
   }
+
+  if (version == "") {
+    var gettedVersion;
+    if (language == "node.js") {
+      res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
+      gettedVersion = res.data[0].version.replace("v", "");
+    } else {
+      res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
+      gettedVersion = res.data[0]["latest"];
+    }
+    version = gettedVersion;
+  }
   setTimeout(() => {
     FileWorker.createConfigFile(
       toolbox,
-      { name: name, lan: language, main: main }, // 1 2 3
+      { name: name, lan: language, main: main, version: version }, // 1 2 3
       args[0],
       args[1]
     ).then((ok, data) => {

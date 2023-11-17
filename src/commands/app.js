@@ -2,7 +2,7 @@ const {
   FileWorker,
   Authentification,
   Tempo,
-  SquidApi,
+  NodeCloudApi,
   Exec,
 } = require("../util");
 
@@ -33,7 +33,7 @@ exports.run = async (toolbox, args) => {
         )
       );
     }
-    SquidApi.api.post.bin
+    NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
       .then(async (resGetProjects) => {
         if (!resGetProjects.data) {
@@ -44,13 +44,14 @@ exports.run = async (toolbox, args) => {
           );
           process.kill(0);
         }
+        console.log(resGetProjects.data);
         if (!resGetProjects.data.ok) {
           toolbox.print.error(
             toolbox.print.colors.red(resGetProjects.data.msg)
           );
           process.kill(0);
         }
-        if (resGetProjects.data.returns.total == 0) {
+        if (resGetProjects.data.total == 0) {
           toolbox.print.error(
             toolbox.print.colors.red(
               "Você ainda não tem nenhuma aplicação na Cloud."
@@ -62,7 +63,7 @@ exports.run = async (toolbox, args) => {
           type: "select",
           name: "Project",
           message: "Qual o seu projeto que você deseja ver as informações?",
-          choices: resGetProjects.data.returns.returns,
+          choices: resGetProjects.data.returns,
         };
         const askPrompt = await toolbox.prompt.ask([askProjects]);
 
@@ -75,7 +76,7 @@ exports.run = async (toolbox, args) => {
           )
         );
         setTimeout(async () => {
-          SquidApi.api.post.bin
+          NodeCloudApi.api.post.bin
             .getProjectInfo(toolbox, askPrompt.Project, token.document)
             .then(async (res) => {
               if (res.data.ok) {
@@ -93,30 +94,27 @@ exports.run = async (toolbox, args) => {
                   )
                 );
                 toolbox.print.highlight(askPrompt.Project + ":");
-                if (res.data.return.returns.projectInfos.description == "") {
-                  res.data.return.returns.projectInfos.description =
-                    "Sem descrição";
+                if (res.data.return.projectInfos.description == "") {
+                  res.data.return.projectInfos.description = "Sem descrição";
                 }
-                toolbox.print.muted(
-                  res.data.return.returns.projectInfos.description
-                );
+                toolbox.print.muted(res.data.return.projectInfos.description);
                 toolbox.print.muted(" ");
                 toolbox.print.info(
                   `Container: ${toolbox.print.colors.muted(
                     `"` + "Próprio" + `"`
                   )}`
                 );
-                let status = toolbox.print.colors.red("OFFLINE");
+                let status = toolbox.print.colors.red("offline");
                 if (
-                  res.data.return.returns.projectInfos.status
+                  res.data.return.projectInfos.status
                     .toLowerCase()
                     .includes("online")
                 )
-                  status = toolbox.print.colors.green("ONLINE");
+                  status = toolbox.print.colors.green("online");
                 toolbox.print.info(`Status: ${status}`);
                 toolbox.print.info(
                   `Starter: ${toolbox.print.colors.muted(
-                    `"` + res.data.return.returns.configFile.START + `"`
+                    `"` + res.data.return.configFile.START + `"`
                   )}`
                 );
                 toolbox.print.info(
@@ -125,29 +123,17 @@ exports.run = async (toolbox, args) => {
                   )}`
                 );
                 let msg = "Não.";
-                if (res.data.return.returns.projectInfos.haveDiscordJS != false)
-                  msg = res.data.return.returns.projectInfos.haveDiscordJS;
+                if (res.data.return.projectInfos.haveDiscordJS != false)
+                  msg = res.data.return.projectInfos.haveDiscordJS;
                 toolbox.print.info(
                   `Discord Bot: ${toolbox.print.colors.muted(`"` + msg + `"`)}`
                 );
                 toolbox.print.info(
                   `Tamanho: ${toolbox.print.colors.muted(
-                    `"` + res.data.return.returns.projectInfos.size + `"`
+                    `"` + res.data.return.projectInfos.size + `"`
                   )}`
                 );
-                const pid = res.data.return.returns.projectInfos.pidGets;
-                if (pid) {
-                  toolbox.print.info(
-                    `Memória: ${toolbox.print.colors.muted(
-                      `"` + formatBytes(pid.memory) + `"`
-                    )}`
-                  );
-                  toolbox.print.info(
-                    `Tempo ligado: ${toolbox.print.colors.muted(
-                      `"` + pid.elapsed + `"`
-                    )}`
-                  );
-                }
+
                 process.kill(0);
               } else {
                 if (res.data.errcode == 500) {

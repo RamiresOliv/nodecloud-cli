@@ -1,4 +1,9 @@
-const { FileWorker, Authentification, Tempo, SquidApi } = require("../util");
+const {
+  FileWorker,
+  Authentification,
+  Tempo,
+  NodeCloudApi,
+} = require("../util");
 
 exports.run = async (toolbox, args) => {
   toolbox.print.info(`Processo: Start ${args[3] ? args[3] : ""}`);
@@ -15,7 +20,7 @@ exports.run = async (toolbox, args) => {
         )
       );
     }
-    SquidApi.api.post.bin
+    NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
       .then(async (resGetProjects) => {
         if (!resGetProjects.data) {
@@ -32,7 +37,7 @@ exports.run = async (toolbox, args) => {
           );
           process.kill(0);
         }
-        if (resGetProjects.data.returns.total == 0) {
+        if (resGetProjects.data.total == 0) {
           toolbox.print.error(
             toolbox.print.colors.red(
               "Você ainda não tem nenhuma aplicação na Cloud."
@@ -48,7 +53,7 @@ exports.run = async (toolbox, args) => {
             type: "select",
             name: "Project",
             message: "Qual o seu projeto que você deseja ser ativado?",
-            choices: resGetProjects.data.returns.returns,
+            choices: resGetProjects.data.returns,
           };
           const askPrompt = await toolbox.prompt.ask([askProjects]);
           projectName = askPrompt.Project;
@@ -69,10 +74,10 @@ exports.run = async (toolbox, args) => {
         );
 
         setTimeout(async () => {
-          SquidApi.api.post
+          NodeCloudApi.api.post
             .start(toolbox, projectName, token.document)
             .then((res) => {
-              if (res.data.returns && res.data.returns.ok) {
+              if (res.data && res.data.ok) {
                 spinner1.succeed(
                   toolbox.print.colors.green(
                     "Continuando trabalho na Cloud..." +
@@ -98,10 +103,10 @@ exports.run = async (toolbox, args) => {
                     )
                   );
                   process.kill(0);
-                } else if (!res.data.returns.ok) {
+                } else if (!res.data.ok) {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.returns.msg +
+                      res.data.msg +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )

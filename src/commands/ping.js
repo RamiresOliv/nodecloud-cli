@@ -1,9 +1,9 @@
-const { SquidApi } = require("../util");
+const { NodeCloudApi } = require("../util");
 
 exports.run = async (toolbox, args) => {
   const spinner = toolbox.print.spin("Esperando resposta...");
   const dataOld = new Date();
-  const { ok, data } = await SquidApi.api.post.ping(toolbox);
+  const { ok, data } = await NodeCloudApi.api.post.ping(toolbox);
   const dataNew = new Date();
 
   if (ok) {

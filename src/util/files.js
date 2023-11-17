@@ -72,6 +72,8 @@ exports.createConfigFile = async (toolbox, Settings, AppPath, CLIPath) => {
     {
       Name: Settings.name,
       Language: Settings.lan,
+      Version: Settings.version,
+      OS: "alpine",
       Starter: Settings.main,
       Id: "N/A",
       Ignoreds: "[]",

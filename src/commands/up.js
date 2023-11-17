@@ -1,4 +1,9 @@
-const { FileWorker, Authentification, Tempo, SquidApi } = require("../util");
+const {
+  FileWorker,
+  Authentification,
+  Tempo,
+  NodeCloudApi,
+} = require("../util");
 
 exports.run = async (toolbox, args) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Upload"));
@@ -35,7 +40,7 @@ exports.run = async (toolbox, args) => {
     );
     process.kill(0);
   }
-  SquidApi.api.post.bin
+  NodeCloudApi.api.post.bin
     .getMyProjects(toolbox, token.document)
     .then(async (resGetProjects) => {
       if (!resGetProjects.data) {
@@ -107,10 +112,10 @@ exports.run = async (toolbox, args) => {
           spinner3.start();
           if (!sended) {
             sended = true;
-            SquidApi.api.post
+            NodeCloudApi.api.post
               .up(toolbox, zipR.filePath, zipR.fileName, token.document)
               .then((res) => {
-                if (res.data.returns && res.data.returns.ok) {
+                if (res.data && res.data.ok) {
                   spinner3.succeed(
                     toolbox.print.colors.green(
                       "Continuando trabalho na Cloud..." +
@@ -136,10 +141,10 @@ exports.run = async (toolbox, args) => {
                       )
                     );
                     process.kill(0);
-                  } else if (!res.data.returns.ok) {
+                  } else if (!res.data.ok) {
                     spinner3.fail(
                       toolbox.print.colors.red(
-                        res.data.returns.msg +
+                        res.data.msg +
                           toolbox.print.colors.muted(
                             " ☁️ Tente novamente mais tarde! Desculpe :<"
                           )

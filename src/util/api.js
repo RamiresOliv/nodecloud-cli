@@ -17,6 +17,7 @@ checkURL = async () => {
 
 exports.api = {};
 exports.api.post = {};
+exports.api.get = {};
 
 const { createWriteStream, appendFileSync, readFileSync } = require("fs");
 const Tempo = require("./temp");
@@ -41,6 +42,11 @@ exports.api.post = {
 exports.api.post.bin = {
   getProjectInfo: Function,
   getMyProjects: Function,
+};
+
+exports.api.get.bin = {
+  getNodeVersion: Function,
+  getPythonVersion: Function,
 };
 
 // Posts Functions:
@@ -154,6 +160,9 @@ exports.api.post.logs = async (toolbox, AppName, token) => {
       },
     }
   );
+  if (!result.data.ok) {
+    return result;
+  }
   const buffered = Buffer.from(result.data.logs, "utf8");
   appendFileSync(
     Tempo.download + "/final-logs-" + AppName.toLowerCase() + ".log",
@@ -253,4 +262,21 @@ exports.api.post.ping = async (toolbox) => {
 };
 
 // Get Functions:
-//xd
+
+exports.api.get.bin.getNodeVersion = async (toolbox) => {
+  await checkURL();
+  const api = toolbox.http.create({
+    baseURL: "https://nodejs.org",
+  });
+  const result = await api.get("/dist/index.json");
+  return result;
+};
+
+exports.api.get.bin.getPythonVersion = async (toolbox) => {
+  await checkURL();
+  const api = toolbox.http.create({
+    baseURL: "https://endoflife.date",
+  });
+  const result = await api.get("/api/python.json");
+  return result;
+};

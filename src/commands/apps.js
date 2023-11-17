@@ -2,7 +2,7 @@ const {
   FileWorker,
   Authentification,
   Tempo,
-  SquidApi,
+  NodeCloudApi,
   Exec,
 } = require("../util");
 
@@ -19,7 +19,7 @@ function formatBytes(bytes, decimals = 2) {
 }
 
 exports.run = async (toolbox, args) => {
-  toolbox.print.info(toolbox.print.colors.dim("Processo: AppInfo"));
+  toolbox.print.info(toolbox.print.colors.dim("Processo: AppsInfo"));
 
   setTimeout(async () => {
     const { ok, token } = await Authentification.getAuth(toolbox);
@@ -33,7 +33,7 @@ exports.run = async (toolbox, args) => {
         )
       );
     }
-    SquidApi.api.post.bin
+    NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
       .then(async (resGetProjects) => {
         if (!resGetProjects.data) {
@@ -50,7 +50,7 @@ exports.run = async (toolbox, args) => {
           );
           process.kill(0);
         }
-        if (resGetProjects.data.returns.total == 0) {
+        if (resGetProjects.data.total == 0) {
           toolbox.print.error(
             toolbox.print.colors.red(
               "Você ainda não tem nenhuma aplicação na Cloud."
@@ -59,12 +59,13 @@ exports.run = async (toolbox, args) => {
           process.kill(0);
         }
         toolbox.print.highlight("Suas aplicações:");
+        toolbox.print.muted("(Isso pode demorar um pouco..)");
         toolbox.print.muted("");
         totalofRuns = 0;
         setTimeout(async () => {
           toolbox.print.info("-".repeat(100));
-          resGetProjects.data.returns.returns.forEach((value) => {
-            SquidApi.api.post.bin
+          resGetProjects.data.returns.forEach((value) => {
+            NodeCloudApi.api.post.bin
               .getProjectInfo(toolbox, value, token.document)
               .then(async (res) => {
                 if (!res || res.data.ok) {
@@ -72,24 +73,15 @@ exports.run = async (toolbox, args) => {
                   line += toolbox.print.colors.cyan(value + ":") + "\n";
                   let status = toolbox.print.colors.red("OFFLINE");
                   if (
-                    res.data.return.returns.projectInfos.status
+                    res.data.return.projectInfos.status
                       .toLowerCase()
                       .includes("online")
                   )
                     status = toolbox.print.colors.green("ONLINE");
                   line += status;
                   line += ` | Tamanho: ${toolbox.print.colors.muted(
-                    `"` + res.data.return.returns.projectInfos.size + `"`
+                    `"` + res.data.return.projectInfos.size + `"`
                   )}`;
-                  const pid = res.data.return.returns.projectInfos.pidGets;
-                  if (pid) {
-                    line += ` | Memória: ${toolbox.print.colors.muted(
-                      `"` + formatBytes(pid.memory) + `"`
-                    )}`;
-                    line += ` | Tempo ligado: ${toolbox.print.colors.muted(
-                      `"` + pid.elapsed + `"`
-                    )}`;
-                  }
 
                   toolbox.print.info(line + "\n" + "-".repeat(100));
                 } else {
@@ -117,7 +109,7 @@ exports.run = async (toolbox, args) => {
                 }
 
                 totalofRuns += 1;
-                if (totalofRuns == resGetProjects.data.returns.returns.length) {
+                if (totalofRuns == resGetProjects.data.returns.length) {
                   toolbox.print.muted("");
                   toolbox.print.muted(
                     "Mais informações sobre as aplicações podem ser vistas aqui quando ligadas!"

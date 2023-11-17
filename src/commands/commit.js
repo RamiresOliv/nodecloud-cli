@@ -1,4 +1,9 @@
-const { FileWorker, Authentification, Tempo, SquidApi } = require("../util");
+const {
+  FileWorker,
+  Authentification,
+  Tempo,
+  NodeCloudApi,
+} = require("../util");
 
 exports.run = async (toolbox, args) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Commit"));
@@ -15,7 +20,7 @@ exports.run = async (toolbox, args) => {
     );
     process.kill(0);
   }
-  SquidApi.api.post.bin
+  NodeCloudApi.api.post.bin
     .getMyProjects(toolbox, token.document)
     .then(async (resGetProjects) => {
       if (!resGetProjects.data) {
@@ -30,7 +35,7 @@ exports.run = async (toolbox, args) => {
         toolbox.print.error(toolbox.print.colors.red(resGetProjects.data.msg));
         process.kill(0);
       }
-      if (resGetProjects.data.returns.total == 0) {
+      if (resGetProjects.data.total == 0) {
         toolbox.print.error(
           toolbox.print.colors.red(
             "Você ainda não tem nenhuma aplicação na Cloud."
@@ -42,7 +47,7 @@ exports.run = async (toolbox, args) => {
         type: "select",
         name: "Project",
         message: "Qual o seu projeto que você deseja efetuar um commit?",
-        choices: resGetProjects.data.returns.returns,
+        choices: resGetProjects.data.returns,
       };
       const askPrompt = await toolbox.prompt.ask([askProjects]);
       const e = await FileWorker.readConfigFile(toolbox, args[0]);
@@ -131,7 +136,7 @@ exports.run = async (toolbox, args) => {
               )
             );
             spinner3.start();
-            SquidApi.api.post
+            NodeCloudApi.api.post
               .commit(
                 toolbox,
                 zipR.filePath,
@@ -140,7 +145,7 @@ exports.run = async (toolbox, args) => {
                 token.document
               )
               .then((res) => {
-                if (res.data.returns && res.data.returns.ok) {
+                if (res.data && res.data.ok) {
                   spinner3.succeed(
                     toolbox.print.colors.green(
                       "Continuando trabalho na Cloud..." +
@@ -166,10 +171,10 @@ exports.run = async (toolbox, args) => {
                       )
                     );
                     process.kill(0);
-                  } else if (!res.data.returns.ok) {
+                  } else if (!res.data.ok) {
                     spinner3.fail(
                       toolbox.print.colors.red(
-                        res.data.returns.msg +
+                        res.data.msg +
                           toolbox.print.colors.muted(
                             " ☁️ Tente novamente mais tarde! Desculpe :<"
                           )

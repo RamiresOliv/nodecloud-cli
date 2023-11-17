@@ -1,7 +1,7 @@
 exports.Authentification = require("./auth");
 exports.Functions = require("./functions");
 exports.FileWorker = require("./files");
-exports.SquidApi = require("./api");
+exports.NodeCloudApi = require("./api");
 exports.Tempo = require("./temp");
 exports.Exec = require("./exec");
 // Selling this product is not allowed.
