@@ -1,16 +1,44 @@
-# Bem vindo(a) a NodeCloud-CLI!
+<h1 align="center">NodeCloud-CLI</h1>
 
-> Sua host quando o asunto é um bom lugar para hospedar suas aplicações!
+> Uma simples host. E sim! Essa é uma CLI para ela!
 
-Projeto feito apenas para diversão e testes então é isso. Não está e provavelmente nunca estará 100% completo para uso publico :( Por que de qualquer jeito precisaria de um lugar que o servidor rodasse..
+Ainda sendo um projeto em produção o NodeCloud é uma Host para aplicações em Python e Node.js baseada em Docker Containers!
 
-## CLI. Resumo
+<h1 align="center">Sobre</h1>
 
-Instalação: `npm install -g nodecloud-cli`.
-Método de uso: `nodecloud help ...`. _Ex: `nodecloud [command] (args)`_
+## Instalação:
 
-Essa CLI é um metodo para upar, commitar e etc qualquer aplicação sem precisar do Discord!
+```sh
+$ npm install -g nodecloud-cli
+```
 
-## CLI. Modo de uso
+## Método de uso:
 
-[sendo feito]
+```sh
+$ nodecloud help ...
+```
+
+\_Ex:
+
+```sh
+$ nodecloud [command] (args)
+```
+
+Usando a CLI você pode fazer tudo oque você fazia pelo Discord mas agora pela sua própria maquina.
+(A NodeCloud ainda continua sendo um serviço em produção que ainda não está 100% publico! Talvez no futuro? Quem sabe!)
+
+## Começando
+
+Começe configurando o API URL da NodeCloud. Você pode achar no Servidor da NodeCloud.
+
+```sh
+$ nodecloud api
+```
+
+Então depois, crie um Token API usando o comando `api` no chat de comandos do bot no servidor da NodeCloud, e cole-o no comando,
+
+```sh
+$ nodecloud login
+```
+
+Agora você está pronto para começar a usar a CLI! Bons desenvolvimentos!
