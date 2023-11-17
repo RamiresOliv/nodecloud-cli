@@ -33,7 +33,7 @@ exports.run = async (toolbox, args) => {
         }
         if (!resGetProjects.data.ok) {
           toolbox.print.error(
-            toolbox.print.colors.red(resGetProjects.data.msg)
+            toolbox.print.colors.red(resGetProjects.data.message)
           );
           process.kill(0);
         }
@@ -106,7 +106,7 @@ exports.run = async (toolbox, args) => {
                 } else if (!res.data.ok) {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.msg +
+                      res.data.message +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )
@@ -116,7 +116,7 @@ exports.run = async (toolbox, args) => {
                 } else {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.msg +
+                      res.data.message +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )
