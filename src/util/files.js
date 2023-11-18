@@ -108,9 +108,9 @@ exports.checkRequiredFiles = async (toolbox, path) => {
   return [true, 200];
 };
 
-exports.createConfigFile = async (toolbox, Settings, AppPath, CLIPath) => {
+exports.createConfigFile = async (toolbox, Settings, AppPath) => {
   const result = await toolbox.EJS.render(
-    toolbox.filesystem.read(CLIPath + "/src/templates/cloud.config.ejs"),
+    toolbox.filesystem.read(__dirname + "/../templates/cloud.config.ejs"),
     {
       Name: Settings.name,
       Language: Settings.lan,

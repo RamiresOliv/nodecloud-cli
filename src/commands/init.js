@@ -42,8 +42,7 @@ exports.run = async (toolbox, args) => {
         version: versionToSend,
         main: defaultConfigs.main[language],
       }, // 1 2 3
-      args[0],
-      args[1]
+      args[0]
     );
     toolbox.print.info(
       toolbox.print.colors.green("Created: " + args[0] + "\\" + "cloud.config")
@@ -72,8 +71,7 @@ exports.run = async (toolbox, args) => {
         version: versionToSend,
         main: defaultConfigs.main[languageToGo],
       }, // 1 2 3
-      args[0],
-      args[1]
+      args[0]
     );
     toolbox.print.info(
       toolbox.print.colors.green("Created: " + args[0] + "\\" + "cloud.config")
@@ -152,8 +150,7 @@ exports.run = async (toolbox, args) => {
     FileWorker.createConfigFile(
       toolbox,
       { name: name.toLowerCase(), lan: language, main: main, version: version }, // 1 2 3
-      args[0],
-      args[1]
+      args[0]
     ).then((ok, data) => {
       loading.succeed(
         toolbox.print.colors.green(
