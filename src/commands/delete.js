@@ -125,7 +125,7 @@ exports.run = async (toolbox, args) => {
                 } else if (!res.data.ok) {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.message +
+                      res.data.msg +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )
@@ -135,7 +135,7 @@ exports.run = async (toolbox, args) => {
                 } else {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.message +
+                      res.data.msg +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )

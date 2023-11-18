@@ -54,11 +54,12 @@ exports.run = async (toolbox, args) => {
     );
     process.kill(0);
   } else if (!response[0] && response[1] == 400) {
-    spinner1.fail(
-      toolbox.print.colors.red(
-        "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique!"
-      )
-    );
+    var msg =
+      "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
+
+    if (response[2]) msg += "TIP: " + response[2];
+
+    spinner1.fail(toolbox.print.colors.red(msg));
     process.kill(0);
   } else if (!response[0] && response[1] == 404) {
     spinner1.fail(

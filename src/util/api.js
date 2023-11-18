@@ -1,4 +1,10 @@
 ApiUrl = "http://localhost:2552"; // default
+const axios = require("axios");
+const https = require("https");
+
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+});
 
 checkURL = async () => {
   const r = await require("local-db-express").document.exists(
@@ -71,17 +77,20 @@ exports.api.post.up = async (
     }
   );*/
 
-  const result = await require("axios")({
-    method: "POST",
-    url: ApiUrl + "/do/@me/upload",
-    data: [require("fs").readFileSync(CompactedProjectPath)],
-    maxContentLength: Infinity,
-    maxBodyLength: Infinity,
-    headers: {
-      ["Token"]: token,
-      ["fileName"]: fileName,
-    },
-  });
+  const result = await axios.post(
+    ApiUrl + "/do/@me/upload",
+
+    [require("fs").readFileSync(CompactedProjectPath)],
+    {
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+      headers: {
+        ["Token"]: token,
+        ["fileName"]: fileName,
+      },
+      httpsAgent: agent,
+    }
+  );
   return result;
 };
 
@@ -97,18 +106,21 @@ exports.api.post.commit = async (
     baseURL: ApiUrl,
   });
   api.post();*/
-  const result = await require("axios")({
-    method: "POST",
-    url: ApiUrl + "/do/@me/commit",
-    data: [require("fs").readFileSync(CompactedProjectPath)],
-    maxContentLength: Infinity,
-    maxBodyLength: Infinity,
-    headers: {
-      ["Token"]: token,
-      ["fileName"]: fileName,
-      ["projectName"]: projectName.toLowerCase(),
-    },
-  });
+  const result = await axios.post(
+    ApiUrl + "/do/@me/commit",
+
+    [require("fs").readFileSync(CompactedProjectPath)],
+    {
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
+      headers: {
+        ["Token"]: token,
+        ["fileName"]: fileName,
+        ["projectName"]: projectName.toLowerCase(),
+      },
+      httpsAgent: agent,
+    }
+  );
   return result;
 };
 

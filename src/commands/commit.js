@@ -101,16 +101,12 @@ exports.run = async (toolbox, args) => {
           );
           process.kill(0);
         } else if (!response[0] && response[1] == 404) {
-          spinner1.fail(
-            toolbox.print.colors.red(
-              "Falha, o arquivo " +
-                toolbox.print.colors.yellow('"' + response[2] + '"') +
-                " não existe ou não foi achado, para continuar porfavor crie o arquivo que é pedido."
-            )
-          );
-          toolbox.print.warning(
-            'Quer uma dica? Use "nodecloud init", para criar do zero um arquivo de configuração!'
-          );
+          var msg =
+            "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
+
+          if (response[2]) msg += "TIP: " + response[2];
+
+          spinner1.fail(toolbox.print.colors.red(msg));
           process.kill(0);
         }
         setTimeout(async () => {
@@ -176,7 +172,7 @@ exports.run = async (toolbox, args) => {
                   } else if (!res.data.ok) {
                     spinner3.fail(
                       toolbox.print.colors.red(
-                        res.data.message +
+                        res.data.msg +
                           toolbox.print.colors.muted(
                             " ☁️ Tente novamente mais tarde! Desculpe :<"
                           )
@@ -186,7 +182,7 @@ exports.run = async (toolbox, args) => {
                   } else {
                     spinner3.fail(
                       toolbox.print.colors.red(
-                        res.data.message +
+                        res.data.msg +
                           toolbox.print.colors.muted(
                             " ☁️ Tente novamente mais tarde! Desculpe :<"
                           )

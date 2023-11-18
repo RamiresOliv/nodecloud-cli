@@ -7,7 +7,7 @@ const {
 
 exports.run = async (toolbox, args) => {
   toolbox.print.info(
-    toolbox.print.colors.dim(`Processo: Stop ${args[3] ? args[3] : ""}`)
+    toolbox.print.colors.dim(`Processo: Stop ${args[2] ? args[2] : ""}`)
   );
 
   setTimeout(async () => {
@@ -50,7 +50,7 @@ exports.run = async (toolbox, args) => {
 
         let projectName =
           "nome impossivel de ser colocado por culpa dos espaços.";
-        if (args[3] == null) {
+        if (args[2] == null) {
           const askProjects = {
             type: "select",
             name: "Project",
@@ -60,9 +60,9 @@ exports.run = async (toolbox, args) => {
           const askPrompt = await toolbox.prompt.ask([askProjects]);
           projectName = askPrompt.Project;
         } else {
-          projectName = args[3];
+          projectName = args[2];
           toolbox.print.success(
-            "√ Aplicação: " + toolbox.print.colors.cyan(args[3])
+            "√ Aplicação: " + toolbox.print.colors.cyan(args[2])
           );
         }
 
@@ -107,7 +107,7 @@ exports.run = async (toolbox, args) => {
                 } else if (!res.data.ok) {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.message +
+                      res.data.msg +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )
@@ -117,7 +117,7 @@ exports.run = async (toolbox, args) => {
                 } else {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.message +
+                      res.data.msg +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )

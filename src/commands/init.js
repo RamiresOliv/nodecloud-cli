@@ -12,11 +12,11 @@ const resume = {
 };
 
 exports.run = async (toolbox, args) => {
-  if (args[3] == "--read") {
+  if (args[2] == "--read") {
     r = await FileWorker.readConfigFile(toolbox, args[0]);
     toolbox.print.info(toolbox.print.colors.muted(r.data));
     return toolbox.print.debug(r.return, "CloudSettings - Reader Debug");
-  } else if (args[3] == "-ly") {
+  } else if (args[2] == "-ly") {
     const { language } = await toolbox.prompt.ask([
       {
         type: "select",
@@ -49,7 +49,7 @@ exports.run = async (toolbox, args) => {
       toolbox.print.colors.green("Created: " + args[0] + "\\" + "cloud.config")
     );
     return process.kill(0);
-  } else if (args[3] == "-y") {
+  } else if (args[2] == "-y") {
     var languageToGo;
     if (FileWorker.fileExists(toolbox, args[0], "main.py")) {
       languageToGo = "python";

@@ -23,11 +23,11 @@ exports.cli = async (args) => {
           }
         } else
           return cli_toolbox.print.warning(
-            `[DevError] Internal Error: ${cmdName}, Don't have run function. Then Command ignored.`
+            `[DevError] Internal Error: ${cmdName}, Don't have config object. Command ignored.`
           );
       } else
         return cli_toolbox.print.warning(
-          `[DevError] Internal Error: ${cmdName}, Don't have config object. Then Command ignored.`
+          `[DevError] Internal Error: ${cmdName}, Don't have run function. Command ignored.`
         );
     });
 
@@ -51,8 +51,11 @@ exports.cli = async (args) => {
     );
     return "warn-cmdNoExpecified-???";
   }
-  args[2].toLowerCase();
-  var command = args[2];
+
+  index = args.indexOf(args[1]);
+  args.splice(index, 1);
+  args[1].toLowerCase();
+  var command = args[1];
   var cmdRun = null;
   var found = false;
   for (var cmd in commands) {
@@ -76,7 +79,6 @@ exports.cli = async (args) => {
   }
 
   try {
-    args[2] = null;
     cli_toolbox.EJS = ejs; // adds EJS in gluegun toolbox
     cmdRun(cli_toolbox, args);
   } catch (err) {

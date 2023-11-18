@@ -41,6 +41,9 @@ build/Release
 node_modules/
 jspm_packages/
 
+# Dependency files
+package-lock.json
+
 # TypeScript v1 declaration files
 typings/
 
@@ -104,4 +107,4 @@ dist
 .tern-port
 
 # Databases
-src/database/base/Auth/MyToken.db
+src/database/

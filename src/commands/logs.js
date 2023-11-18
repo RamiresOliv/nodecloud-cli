@@ -8,6 +8,52 @@ const {
 const { appendFileSync } = require("fs");
 const { exec } = require("child_process");
 
+async function tooBig(toolbox, askPrompt, res, needAsk) {
+  if (needAsk == null) needAsk = true;
+  var confirmation = true;
+  if (needAsk) {
+    confirmation = await toolbox.prompt.confirm(
+      toolbox.print.colors.yellow(
+        'O terminal de "' +
+          askPrompt.Project +
+          '" parece ser muito grande! (>= 1000)'
+      ) + " Desejá abrir os logs no seu bloco de notas?",
+      true
+    );
+  }
+  if (confirmation) {
+    var type = "open " + res.added.txtPath;
+    if (process.platform == "win32") {
+      type = "c:\\windows\\notepad.exe " + res.added.txtPath;
+    }
+
+    const a = exec(type);
+
+    a.stdout.on("data", (a) => {
+      console.log(a);
+    });
+    a.on("close", (a) => {
+      process.kill(0);
+    });
+    console.log(
+      toolbox.print.colors.muted(res.added.logPath.replace(`\\`, "/"))
+    );
+  } else {
+    console.log(
+      toolbox.print.colors.muted(
+        askPrompt.Project.toUpperCase() + " LOGS ---------"
+      )
+    );
+    console.log(res.added.translated);
+    console.log(
+      toolbox.print.colors.muted(
+        askPrompt.Project.toUpperCase() + " LOGS END ---------"
+      )
+    );
+    process.kill(0);
+  }
+}
+
 exports.run = async (toolbox, args) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Logs"));
 
@@ -85,50 +131,10 @@ exports.run = async (toolbox, args) => {
                 if (
                   (args[2] != null && args[2].toLowerCase() == "--open") ||
                   (args[2] != null && args[2].toLowerCase() == "-open")
-                )
-                  await Exec.openTXTFile(res.added.txtPath);
-                if (res.added.translated.split("\n").length >= 1000) {
-                  const confirmation = await toolbox.prompt.confirm(
-                    toolbox.print.colors.yellow(
-                      'O terminal de "' +
-                        askPrompt.Project +
-                        '" parece ser muito grande! '
-                    ) + "Desejá abrir os logs no seu bloco de notas?",
-                    true
-                  );
-                  if (confirmation) {
-                    var type = "open " + res.added.txtPath;
-                    if (process.platform == "win32") {
-                      type = "c:\\windows\\notepad.exe " + res.added.txtPath;
-                    }
-
-                    const a = exec(type);
-
-                    a.stdout.on("data", (a) => {
-                      console.log(a);
-                    });
-                    a.on("close", (a) => {
-                      process.kill(0);
-                    });
-                    console.log(
-                      toolbox.print.colors.muted(
-                        res.added.logPath.replace(`\\`, "/")
-                      )
-                    );
-                  } else {
-                    console.log(
-                      toolbox.print.colors.muted(
-                        askPrompt.Project.toUpperCase() + " LOGS ---------"
-                      )
-                    );
-                    console.log(res.added.translated);
-                    console.log(
-                      toolbox.print.colors.muted(
-                        askPrompt.Project.toUpperCase() + " LOGS END ---------"
-                      )
-                    );
-                    process.kill(0);
-                  }
+                ) {
+                  await tooBig(toolbox, askPrompt, res, false);
+                } else if (res.added.translated.split("\n").length >= 1000) {
+                  await tooBig(toolbox, askPrompt, res);
                 } else {
                   console.log(
                     toolbox.print.colors.muted(
@@ -167,7 +173,7 @@ exports.run = async (toolbox, args) => {
                 } else {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.message +
+                      res.data.msg +
                         toolbox.print.colors.muted(
                           " ☁️ Tente novamente mais tarde! Desculpe :<"
                         )

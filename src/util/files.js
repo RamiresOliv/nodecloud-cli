@@ -1,4 +1,4 @@
-const { existsSync, createWriteStream } = require("fs");
+const { existsSync, createWriteStream, readdirSync, statSync } = require("fs");
 var archiver = require("archiver");
 
 // Selling this product is not allowed.
@@ -39,28 +39,70 @@ exports.readConfigFile = async (toolbox, FilePath) => {
 };
 
 exports.checkRequiredFiles = async (toolbox, path) => {
+  if (!existsSync(path + "/cloud.config")) return [false, 404, "cloud.config"];
   const r = await exports.readConfigFile(toolbox, path);
-  if (r.data[0] == false && r.data[1] == "500") {
+  if (r[0] == false && r[1] == "500") {
     return [false, 500];
   }
-  if (!existsSync(path + "/cloud.config")) return [false, 404, "cloud.config"];
-  if (
-    r.return.LANGUAGE.toLowerCase() == "node.js" &&
-    !existsSync(path + "/package.json")
-  )
-    return [false, 404, "package.json"];
-  if (
-    r.return.LANGUAGE.toLowerCase() == "python" &&
-    !existsSync(path + "/requirements.txt")
-  )
-    return [false, 404, "requirements.txt"];
+
+  const values = ["NAME", "LANGUAGE", "START", "IGNOREDS"];
+
   if (
     r.return.NAME == null ||
     r.return.LANGUAGE == null ||
     r.return.START == null ||
-    r.return.IGNOREDS == null
+    r.return.IGNOREDS == null ||
+    r.return.NAME == "" ||
+    r.return.LANGUAGE == "" ||
+    r.return.START == ""
   ) {
-    return [false, 400];
+    var detecteds = [];
+    var invalids = [];
+    var count = 0;
+
+    delete r.return.IGNOREDS;
+
+    for (var i in r.return) {
+      if (r.return[i] == null || r.return[i] == "") {
+        detecteds.push(invalids);
+      }
+    }
+
+    for (var i in r.return) {
+      if (r.return[i] == null || r.return[i] == "") {
+        count += 1;
+        var returns = i + ",";
+        if (detecteds.length == count) returns = i + ".";
+        invalids.push(returns);
+      }
+    }
+    return [
+      false,
+      400,
+      `Algum valor pode estar vazio ou não existente, ${
+        count > 1 ? "erros identificados" : "erro identificado"
+      }: ` + invalids.join(" "),
+    ];
+  }
+
+  if (r.return.LANGUAGE.toLowerCase() == "node.js") {
+    ("found node.js");
+  } else if (r.return.LANGUAGE.toLowerCase() == "python") {
+    ("found python");
+  } else {
+    return [false, 400, "LANGUAGE Invalid: Apenas node.js ou python"];
+  }
+
+  if (
+    r.return.LANGUAGE.toLowerCase() == "node.js" &&
+    !existsSync(path + "/package.json")
+  ) {
+    return [false, 404, "package.json"];
+  } else if (
+    r.return.LANGUAGE.toLowerCase() == "python" &&
+    !existsSync(path + "/requirements.txt")
+  ) {
+    return [false, 404, "requirements.txt"];
   }
 
   return [true, 200];
@@ -96,9 +138,20 @@ exports.createProjectZipFile = async (
     throw err;
   });
 
+  var venvFolder = "";
+  readdirSync(toZipPath)
+    .filter((childName) => !statSync(toZipPath + "/" + childName).isFile())
+    .forEach((folder) => {
+      readdirSync(toZipPath + "/" + folder).forEach((child) => {
+        if (child == "pyvenv.cfg") {
+          venvFolder = folder + "/**";
+        }
+      });
+    });
+
   archive.glob("**/*", {
     cwd: toZipPath,
-    ignore: ["node_modules/**", "package-lock.json"],
+    ignore: ["node_modules/**", "package-lock.json", venvFolder],
   });
 
   archive.pipe(outputFile);
