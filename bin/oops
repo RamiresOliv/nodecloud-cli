@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
-require("gluegun").print.warning(
-  "Warning: The CLI needs to be installed globally 'npm i -g nodecloud-cli' and cannot be called by requires!"
-);
+const GG = require("gluegun");
+
+GG.print.highlight("NodeCloud-CLI:");
+GG.print.warning("Fail: The CLI needs to be installed globally 'npm i -g nodecloud-cli' and cannot be called by requires!");
+GG.print.info(`Check a small instructions in this file. path: ${__dirname}\\oops"`);
+
+// This will alert you if you use "node ." or install in local,
+// Again, for fix this you just need use 'npm i -g nodecloud-cli' for install the CLI globally and 'npm uninstall nodecloud-cli' for uninstall locally dependencys.

@@ -25,5 +25,3 @@ require("../src/cli")
       toolbox.print.debug(result, "RenderResult");
     }
   });
-
-// UIII ele gooosta
