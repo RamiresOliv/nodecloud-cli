@@ -1,28 +1,33 @@
 exports.run = async (_toolbox, args) => {
-  const files = _toolbox.filesystem.list(args[1] + "/src/commands");
+  console.log(__dirname);
+  const files = _toolbox.filesystem.list(__dirname);
   const tableItens = [
     [
       _toolbox.print.colors.highlight("Command"),
-      _toolbox.print.colors.highlight("Description"),
       _toolbox.print.colors.highlight("Aliases"),
+      _toolbox.print.colors.highlight("Description"),
     ],
   ];
   files.forEach((fileName) => {
-    const file = require(args[1] + "/src/commands/" + fileName);
+    const file = require(__dirname + "/" + fileName);
 
     var aliases = "";
-    if (file.config.aliases) {
-      file.config.aliases.forEach((alias) => {
-        aliases += alias + " ";
+    if (file.config.aliases && file.config.aliases.length != 0) {
+      file.config.aliases.forEach((alias, i) => {
+        if (file.config.aliases.length == i + 1) {
+          aliases += alias + ".";
+        } else {
+          aliases += alias + ", ";
+        }
       });
     } else {
-      aliases = "";
+      aliases = "none";
     }
 
     tableItens.push([
       _toolbox.print.colors.green(file.config.name),
-      file.config.description,
-      aliases,
+      _toolbox.print.colors.yellow(aliases),
+      _toolbox.print.colors.grey(file.config.description),
     ]);
   });
   _toolbox.print.table(tableItens, {

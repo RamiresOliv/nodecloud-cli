@@ -42,13 +42,13 @@ exports.cli = async (args) => {
         require("../package.json").versionType.toUpperCase()
     );
     return "warn-cmdNoExpecified-???";
-  } else if (args[2].toLowerCase() == "-v" || args[2].toLowerCase() == "--v") {
-    console.log(
-      `nodecloud-cli V` +
-        require("../package.json").version +
-        "-" +
-        require("../package.json").versionType.toUpperCase()
-    );
+  } else if (
+    args[2].toLowerCase() == "-v" ||
+    args[2].toLowerCase() == "--v" ||
+    args[2].toLowerCase() == "-version" ||
+    args[2].toLowerCase() == "--version"
+  ) {
+    cli_toolbox.print.info(require("../package.json").version);
     return "warn-cmdNoExpecified-???";
   }
 

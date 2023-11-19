@@ -8,20 +8,49 @@ process.argv[0] = process.cwd(); // Defines where the command called default is 
 process.argv[1]; // <- [...]/bin/nodecloud
 process.argv[1] = __dirname.replace("\\", "/") + "/.."; // <- nodecloud-root
 
+const package = require("../package.json");
+const child_process = require("child_process");
 const toolbox = require("gluegun");
 
-// Render in cli.js
-require("../src/cli")
-  .cli(process.argv)
-  .then((result) => {
-    if (DEBUGGABLE && result != null) {
-      toolbox.print.info("Debug:");
-      toolbox.print.info("-".repeat(70));
-      toolbox.print.warning("Warning: Responses Debug are Enabled!");
-      toolbox.print.warning(
-        toolbox.print.colors.bgRed("[INSECURE]") +
-          ": Private information may appear! Be careful! (This has NO!! filters)"
-      );
-      toolbox.print.debug(result, "RenderResult");
-    }
+// Check last Versions
+checkVersions = () => {
+  return new Promise((resolve, reject) => {
+    child = child_process.exec(`npm view ${package.name} version`);
+    child.stderr.on("data", (err) => {
+      toolbox.print.warning(`NPM CHECK VERSION ERROR:\n${err}`);
+      resolve();
+    });
+    child.stdout.on("data", (newVersion) => {
+      newVersion = newVersion.replace("\n", "");
+
+      if (newVersion != package.version) {
+        toolbox.print.warning(
+          `Warning: new version of ${package.name}: "${newVersion}", use 'nodecloud update' or 'npm install -g ${package.name}@latest'`
+        );
+      }
+      resolve();
+    });
   });
+};
+
+main = async () => {
+  await checkVersions();
+
+  // Render in cli.js
+  require("../src/cli")
+    .cli(process.argv)
+    .then((result) => {
+      if (DEBUGGABLE && result != null) {
+        toolbox.print.info("Debug:");
+        toolbox.print.info("-".repeat(70));
+        toolbox.print.warning("Warning: Responses Debug are Enabled!");
+        toolbox.print.warning(
+          toolbox.print.colors.bgRed("[INSECURE]") +
+            ": Private information may appear! Be careful! (This has NO!! filters)"
+        );
+        toolbox.print.debug(result, "RenderResult");
+      }
+    });
+};
+
+main();

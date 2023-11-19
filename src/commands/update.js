@@ -46,6 +46,6 @@ exports.run = async (toolbox, args) => {
 
 exports.config = {
   name: "update",
-  description: "Opens the CLI NPM Root Folder.",
+  description: "Updates the NPM Module to the latest version.",
   aliases: [],
 };
