@@ -35,7 +35,7 @@ exports.run = async (toolbox, args) => {
         }
         if (!resGetProjects.data.ok) {
           toolbox.print.error(
-            toolbox.print.colors.red(resGetProjects.data.message)
+            toolbox.print.colors.red(resGetProjects.data.msg)
           );
           process.kill(0);
         }

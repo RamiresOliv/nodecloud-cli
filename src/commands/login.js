@@ -1,6 +1,17 @@
-const { Authentification } = require("../util");
+const { Authentification, NodeCloudApi } = require("../util");
 
 exports.run = async (toolbox, args) => {
+  const pingReturn = await NodeCloudApi.api.post.ping(toolbox);
+
+  if (!pingReturn.ok) {
+    toolbox.print.error(
+      `Não foi possivel identificar o servidor, talvez seu baseUrl esteja invalido! Use ${toolbox.print.colors.yellow(
+        "nodecloud api"
+      )} para mudar a url da api.`
+    );
+    process.kill(0);
+  }
+
   const { token } = await toolbox.prompt.ask([
     {
       type: "password",
@@ -11,13 +22,13 @@ exports.run = async (toolbox, args) => {
     },
   ]);
   const confirmation = await toolbox.prompt.confirm(
-    "Você tem que quer se conectar a nodecloud com esse token?",
+    "Você tem certeza que você gostaria de conectar a nodecloud com esse token?",
     true
   );
 
   if (confirmation) {
     const loading = toolbox.print.spin(
-      "Porfavor espere estamos autentificando seu token..."
+      "Porfavor espere estamos agora identificando você e seu token..."
     );
     const res = await Authentification.registerNewToken(toolbox, token);
     if (res[0]) {
@@ -26,6 +37,7 @@ exports.run = async (toolbox, args) => {
           "🥳 Parabéns! Agora sua conta está vinculada com essa CLI! Os comandos agora estarão disponiveis!"
         )
       );
+      //toolbox.print.info(toolbox.print.colors.green("Conta: "));
       process.kill(0);
     } else {
       loading.fail(toolbox.print.colors.red("Falha, " + res[1]));
