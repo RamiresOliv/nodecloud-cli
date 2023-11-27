@@ -8,15 +8,14 @@ process.argv[0] = process.cwd(); // Defines where the command called default is 
 process.argv[1]; // <- [...]/bin/nodecloud
 process.argv[1] = __dirname.replace("\\", "/") + "/.."; // <- nodecloud-root
 
+const { exec } = require("child_process");
 const package = require("../package.json");
-const child_process = require("child_process");
 const toolbox = require("gluegun");
 
-const { exec } = require("child_process");
-
-const title = "NodeCloud-CLI";
-
+const title = "NodeCloud-CLI [BIN]";
+/*
 // Check last Versions
+const child_process = require("child_process");
 checkVersions = () => {
   return new Promise((resolve, reject) => {
     child = child_process.exec(`npm view ${package.name} version`);
@@ -36,15 +35,17 @@ checkVersions = () => {
     });
   });
 };
-
+*/
 main = async () => {
-  await checkVersions();
+  //await checkVersions();
   exec("title " + title);
   exec(`$host.UI.RawUI.WindowTitle = "${title}"`);
 
   // Render in cli.js
   require("../src/cli")
-    .cli(process.argv)
+    .cli(process.argv, {
+      child_proccess: require("child_process"),
+    })
     .then((result) => {
       if (DEBUGGABLE && result != null) {
         toolbox.print.info("Debug:");

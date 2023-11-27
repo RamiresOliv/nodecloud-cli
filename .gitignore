@@ -108,3 +108,8 @@ dist
 
 # Databases
 src/database/
+
+# Custom
+
+download/
+upload/

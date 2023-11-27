@@ -4,8 +4,10 @@ const ejs = require("ejs");
 
 // Selling this product is not allowed.
 
+const title = "NodeCloud-CLI";
+
 // Only Time commands handler
-exports.cli = async (args) => {
+exports.cli = async (args, requires) => {
   const commands = {};
   const aliases = {};
   readdirSync(args[1] + "/src/commands")
@@ -79,6 +81,11 @@ exports.cli = async (args) => {
   }
 
   try {
+    requires.child_proccess.exec("title " + title + " " + command);
+    requires.child_proccess.exec(
+      `$host.UI.RawUI.WindowTitle = "${title} ${command}"`
+    );
+
     cli_toolbox.EJS = ejs; // adds EJS in gluegun toolbox
     cmdRun(cli_toolbox, args);
   } catch (err) {
