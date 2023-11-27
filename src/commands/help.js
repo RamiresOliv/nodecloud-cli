@@ -21,7 +21,7 @@ exports.run = async (_toolbox, args) => {
         }
       });
     } else {
-      aliases = "none";
+      aliases = "N/A";
     }
 
     tableItens.push([
