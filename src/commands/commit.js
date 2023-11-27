@@ -117,6 +117,13 @@ exports.run = async (toolbox, args) => {
           spinner2.start();
 
           const checkin = await FileWorker.readConfigFile(toolbox, args[0]);
+          if (checkin[0] == false) {
+            toolbox.print.warning(
+              "⚠️ O arquivo de configuração da sua aplicação está invalida, não foi possivel ler o arquivo. Verifique por erros e tente novamente!"
+            );
+            process.kill(0);
+          }
+
           const zipR = await FileWorker.createProjectZipFile(
             toolbox,
             args[0],

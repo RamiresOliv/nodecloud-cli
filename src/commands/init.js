@@ -14,6 +14,12 @@ const resume = {
 exports.run = async (toolbox, args) => {
   if (args[2] == "--read") {
     r = await FileWorker.readConfigFile(toolbox, args[0]);
+    if (r[0] == false) {
+      toolbox.print.warning(
+        "⚠️ O arquivo de configuração da sua aplicação está invalida, não foi possivel ler o arquivo. Verifique por erros e tente novamente!"
+      );
+      process.kill(0);
+    }
     toolbox.print.info(toolbox.print.colors.muted(r.data));
     return toolbox.print.debug(r.return, "CloudSettings - Reader Debug");
   } else if (args[2] == "-ly") {
