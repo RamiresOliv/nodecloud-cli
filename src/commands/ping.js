@@ -26,6 +26,5 @@ exports.run = async (toolbox, args) => {
 
 exports.config = {
   name: "ping",
-  description:
-    "Send a test request to the server and returns the ping of the Request.",
+  description: "Tests the server response.",
 };
