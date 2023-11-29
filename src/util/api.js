@@ -1,4 +1,4 @@
-ApiUrl = "http://localhost:2552"; // default
+ApiUrl = "https://nodecloud-api.ramiresoliv.repl.co"; // default for tests: http://localhost:2552, for normal use: https://nodecloud-api.ramiresoliv.repl.co
 const axios = require("axios");
 const https = require("https");
 
