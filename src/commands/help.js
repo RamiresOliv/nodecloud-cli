@@ -1,5 +1,5 @@
 exports.run = async (_toolbox, args) => {
-  console.log(__dirname);
+  console.log(_toolbox.print.colors.highlight("NodeCloud-CLI Commands List:"));
   const files = _toolbox.filesystem.list(__dirname);
   const tableItens = [
     [
@@ -33,6 +33,9 @@ exports.run = async (_toolbox, args) => {
   _toolbox.print.table(tableItens, {
     format: "markdown",
   });
+  _toolbox.print.muted(
+    "Installed CLI Version: " + require("../../package.json").version
+  );
   _toolbox.print.muted("All of this commands are disponible in the CLI.");
 };
 

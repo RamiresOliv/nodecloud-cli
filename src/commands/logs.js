@@ -82,7 +82,9 @@ exports.run = async (toolbox, args) => {
         }
         if (!resGetProjects.data.ok) {
           toolbox.print.error(
-            toolbox.print.colors.red(resGetProjects.data.msg)
+            toolbox.print.colors.red(
+              resGetProjects.data.msg || resGetProjects.data
+            )
           );
           process.kill(0);
         }
@@ -173,10 +175,11 @@ exports.run = async (toolbox, args) => {
                 } else {
                   spinner1.fail(
                     toolbox.print.colors.red(
-                      res.data.msg +
-                        toolbox.print.colors.muted(
-                          " ☁️ Tente novamente mais tarde! Desculpe :<"
-                        )
+                      res.data.msg ||
+                        res.data +
+                          toolbox.print.colors.muted(
+                            " ☁️ Tente novamente mais tarde! Desculpe :<"
+                          )
                     )
                   );
                   process.kill(0);

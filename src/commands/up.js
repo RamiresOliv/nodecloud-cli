@@ -138,20 +138,22 @@ exports.run = async (toolbox, args) => {
               } else if (!res.data.ok) {
                 spinner3.fail(
                   toolbox.print.colors.red(
-                    res.data.msg +
-                      toolbox.print.colors.muted(
-                        " ☁️ Tente novamente mais tarde! Desculpe :<"
-                      )
+                    res.data.msg ||
+                      res.data +
+                        toolbox.print.colors.muted(
+                          " ☁️ Tente novamente mais tarde! Desculpe :<"
+                        )
                   )
                 );
                 process.kill(0);
               } else {
                 spinner3.fail(
                   toolbox.print.colors.red(
-                    res.data.msg +
-                      toolbox.print.colors.muted(
-                        " ☁️ Tente novamente mais tarde! Desculpe :<"
-                      )
+                    res.data.msg ||
+                      res.data +
+                        toolbox.print.colors.muted(
+                          " ☁️ Tente novamente mais tarde! Desculpe :<"
+                        )
                   )
                 );
                 process.kill(0);

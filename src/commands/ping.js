@@ -9,17 +9,20 @@ exports.run = async (toolbox, args) => {
   if (ok) {
     var result = (dataOld - dataNew) * -1;
     spinner.succeed("🏓 Pong! Latência de " + result + "MS");
-    if (args[2] == "--debug") {
+    if (args[2] && args[2].toLowerCase() == "--debug") {
       toolbox.print.muted("[DEBUG] HTTP RESPONSE: " + data);
     }
-    process.kill(0);
-    if (result >= 1000) {
+    if (result >= 5000) {
       toolbox.print.warning(
-        "Bem... Parece que o ping está meio alto... Verifique sua internet. Se caso não for isso pedimos desculpas."
+        "Hm. Talvez sua conecção com a Internet não está boa ou o NC-EX-API acabou de ligar! (normal)"
       );
     }
+    process.kill(0);
   } else {
     spinner.fail("Falha em tentar receber o ping...");
+    if (args[2] && args[2].toLowerCase() == "--debug") {
+      toolbox.print.muted("[DEBUG] HTTP RESPONSE: " + data);
+    }
     process.kill(0);
   }
 };
