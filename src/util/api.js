@@ -53,6 +53,7 @@ exports.api.post.bin = {
 exports.api.get.bin = {
   getNodeVersion: Function,
   getPythonVersion: Function,
+  getRubyVersion: Function,
 };
 
 // Posts Functions:
@@ -290,5 +291,14 @@ exports.api.get.bin.getPythonVersion = async (toolbox) => {
     baseURL: "https://endoflife.date",
   });
   const result = await api.get("/api/python.json");
+  return result;
+};
+
+exports.api.get.bin.getRubyVersion = async (toolbox) => {
+  await checkURL();
+  const api = toolbox.http.create({
+    baseURL: "https://endoflife.date",
+  });
+  const result = await api.get("/api/ruby.json");
   return result;
 };

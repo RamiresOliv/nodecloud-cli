@@ -3,12 +3,18 @@ const { FileWorker, NodeCloudApi } = require("../util");
 const defaultConfigs = {
   name: "mycoolapp",
   language: "node.js",
-  main: { default: "index.js", ["node.js"]: "index.js", ["python"]: "main.py" },
+  main: {
+    default: "index.js",
+    ["node.js"]: "index.js",
+    ["python"]: "main.py",
+    ["ruby"]: "main.rb",
+  },
 };
 
 const resume = {
   ["python"]: "py",
   ["node.js"]: "js",
+  ["ruby"]: "rb",
 };
 
 exports.run = async (toolbox, args) => {
@@ -29,15 +35,20 @@ exports.run = async (toolbox, args) => {
         name: "language",
         message:
           "Porfavor informe qual tipo de linguagem essa aplicação vai usar.",
-        choices: ["python", "node.js"],
+        choices: ["node.js", "python", "ruby"],
       },
     ]);
+    console.log(language);
     var versionToSend;
     if (language == "node.js") {
       res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
       versionToSend = res.data[0].version.replace("v", "");
-    } else {
+    } else if (language == "python") {
       res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
+      versionToSend = res.data[1]["latest"];
+    } else if (language == "ruby") {
+      console.log("sdgsdfsdfghsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfg");
+      res = await NodeCloudApi.api.get.bin.getRubyVersion(toolbox);
       versionToSend = res.data[0]["latest"];
     }
     await FileWorker.createConfigFile(
@@ -53,11 +64,19 @@ exports.run = async (toolbox, args) => {
     toolbox.print.info(
       toolbox.print.colors.green("Created: " + args[0] + "\\" + "cloud.config")
     );
+
+    toolbox.print.info(
+      toolbox.print.colors.muted(
+        `Lingaguem selecionada: ${language} versão: ${versionToSend}`
+      )
+    );
     return process.kill(0);
   } else if (args[2] == "-y") {
     var languageToGo;
     if (FileWorker.fileExists(toolbox, args[0], "main.py")) {
       languageToGo = "python";
+    } else if (FileWorker.fileExists(toolbox, args[0], "main.rb")) {
+      languageToGo = "ruby";
     } else {
       languageToGo = defaultConfigs.language;
     }
@@ -65,8 +84,11 @@ exports.run = async (toolbox, args) => {
     if (languageToGo == "node.js") {
       res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
       versionToSend = res.data[0].version.replace("v", "");
-    } else {
+    } else if (languageToGo == "python") {
       res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
+      versionToSend = res.data[1]["latest"];
+    } else if (languageToGo == "ruby") {
+      res = await NodeCloudApi.api.get.bin.getRubyVersion(toolbox);
       versionToSend = res.data[0]["latest"];
     }
     await FileWorker.createConfigFile(
@@ -82,35 +104,101 @@ exports.run = async (toolbox, args) => {
     toolbox.print.info(
       toolbox.print.colors.green("Created: " + args[0] + "\\" + "cloud.config")
     );
+    toolbox.print.info(
+      toolbox.print.colors.muted(
+        `Lingaguem selecionada: ${languageToGo} versão: ${versionToSend}`
+      )
+    );
     return process.kill(0);
   }
-  let { name, language } = await toolbox.prompt.ask([
+  let { name } = await toolbox.prompt.ask([
     {
       type: "input",
       name: "name",
       message: "Porfavor insire um nome para sua Aplicação.",
     },
+  ]);
+  if (name == "") {
+    toolbox.print.info(
+      toolbox.print.colors.red("A aplicação precisa de um nome.")
+    );
+    process.kill(0);
+  }
+  let { language } = await toolbox.prompt.ask([
     {
       type: "select",
       name: "language",
       message:
         "Porfavor informe qual tipo de linguagem essa aplicação vai usar.",
-      choices: ["node.js", "python"],
+      choices: ["node.js", "python", "ruby"],
     },
   ]);
-  let { version, mainSelect } = await toolbox.prompt.ask([
+  var versionsGetRes = [];
+  if (language == "node.js") {
+    res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
+    toolbox.print.info(
+      toolbox.print.colors.yellow(
+        "Node.js: Jesus.. Total de " +
+          res.data.length +
+          " versões achadas!! Mas só 12 foram listadas."
+      )
+    );
+    toolbox.print.info(
+      toolbox.print.colors.muted(
+        'Não achou a versão que precisa? Use a opção "Manual" para digitar manualmente.'
+      )
+    );
+    var times = 0;
+    res.data.forEach((version) => {
+      if (times <= 13) {
+        versionsGetRes.push(version["version"].replace("v", ""));
+      }
+      times += 1;
+    });
+    versionsGetRes.push("Manual");
+  } else if (language == "python") {
+    res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
+    res.data.forEach((version) => {
+      versionsGetRes.push(version["latest"]);
+    });
+    versionsGetRes.shift();
+  } else if (language == "ruby") {
+    res = await NodeCloudApi.api.get.bin.getRubyVersion(toolbox);
+    res.data.forEach((version) => {
+      versionsGetRes.push(version["latest"]);
+    });
+    //versionToSend = res.data[0]["latest"];
+  }
+  let { version } = await toolbox.prompt.ask([
     {
-      type: "input",
+      type: "select",
       name: "version",
       message:
         "Porfavor informe qual a versão do " +
         language +
-        " sua aplicação vai usar. (ex: 20) (deixe em branco para a versão mais recente)",
+        " sua aplicação vai usar.",
+      choices: versionsGetRes,
     },
+  ]);
+  if (version == "Manual") {
+    let { versionManual } = await toolbox.prompt.ask([
+      {
+        type: "input",
+        name: "versionManual",
+        message: "Agora inforome aqui qual versão você gostaria usar.",
+      },
+    ]);
+    version = versionManual;
+  }
+
+  let { mainSelect } = await toolbox.prompt.ask([
     {
       type: "input",
       name: "mainSelect",
-      message: "Porfavor insire o nome do arquivo de inicialização.",
+      message:
+        "Porfavor insira o nome do arquivo de inicialização. (input_vazio = " +
+        defaultConfigs.main[language] +
+        ")",
     },
   ]);
   if (!name == "")
@@ -121,14 +209,10 @@ exports.run = async (toolbox, args) => {
   const loading = toolbox.print.spin(
     toolbox.print.colors.cyan("Continuando...")
   );
-  if (name == "") {
-    loading.fail(toolbox.print.colors.red("A aplicação precisa de um nome."));
-    process.kill(0);
-  }
   if (language == "") {
     loading.fail(
       toolbox.print.colors.red(
-        "É necessario especificar qual linguagem sua aplicação usará. python || node.js"
+        "É necessario especificar qual linguagem sua aplicação usará. python || node.js || ruby"
       )
     );
     process.kill(0);
@@ -141,17 +225,22 @@ exports.run = async (toolbox, args) => {
     main = mainSelect + "." + resume[language];
   }
 
-  if (version == "") {
+  /*if (version == null || version == "") {
     var gettedVersion;
     if (language == "node.js") {
       res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
       gettedVersion = res.data[0].version.replace("v", "");
-    } else {
+    } else if (languageToGo == "python") {
       res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
-      gettedVersion = res.data[1]["latest"];
+
+      versionToSend = res.data[1]["latest"];
+    } else if (languageToGo == "ruby") {
+      res = await NodeCloudApi.api.get.bin.getRubyVersion(toolbox);
+      console.log(res);
+      versionToSend = res.data[0]["latest"];
     }
     version = gettedVersion;
-  }
+  }*/
   setTimeout(() => {
     FileWorker.createConfigFile(
       toolbox,
@@ -161,6 +250,11 @@ exports.run = async (toolbox, args) => {
       loading.succeed(
         toolbox.print.colors.green(
           'Arquivo de configuração da Cloud "cloud.config", foi criado.'
+        )
+      );
+      toolbox.print.info(
+        toolbox.print.colors.muted(
+          `Lingaguem selecionada: ${language} versão: ${version}`
         )
       );
       process.kill(0);

@@ -89,8 +89,10 @@ exports.checkRequiredFiles = async (toolbox, path) => {
     ("found node.js");
   } else if (r.return.LANGUAGE.toLowerCase() == "python") {
     ("found python");
+  } else if (r.return.LANGUAGE.toLowerCase() == "ruby") {
+    ("found ruby");
   } else {
-    return [false, 400, "LANGUAGE Invalid: Apenas node.js ou python"];
+    return [false, 400, "LANGUAGE Invalid: Apenas node.js, python ou ruby"];
   }
 
   if (
@@ -103,6 +105,11 @@ exports.checkRequiredFiles = async (toolbox, path) => {
     !existsSync(path + "/requirements.txt")
   ) {
     return [false, 404, "requirements.txt"];
+  } else if (
+    r.return.LANGUAGE.toLowerCase() == "ruby" &&
+    !existsSync(path + "/Gemfile")
+  ) {
+    return [false, 404, "Gemfile"];
   }
 
   return [true, 200];
