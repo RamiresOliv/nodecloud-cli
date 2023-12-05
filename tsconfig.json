@@ -1,6 +1,7 @@
 {
   "exclude": ["node_modules", "**/.ignore_*", "**/build/"],
-  "include": ["src"],
+  "include": ["src", "index.d.ts", "index.d.ts"],
+  "types": ["local-db-express"],
   "compilerOptions": {
     // "incremental": true,
     // "composite": true,

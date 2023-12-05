@@ -31,15 +31,16 @@ const default_json_1 = require("./api/default.json"); //const { apiDefault } = r
 var ApiUrl = default_json_1.apiDefault; // default for tests: http://localhost:2552, for normal use: https://nodecloud-api.ramiresoliv.repl.co
 const fs_1 = require("fs");
 const _1 = require(".");
+const Database = __importStar(require("./database"));
 const axios_1 = __importDefault(require("axios"));
 const https = __importStar(require("https"));
 const agent = new https.Agent({
     rejectUnauthorized: false,
 });
 const checkURL = async () => {
-    const r = await require("local-db-express").document.exists("ApiBaseUrl", "Current");
+    const r = await Database.document.exists("ApiBaseUrl", "Current");
     if (r) {
-        const getted = await require("local-db-express").document.get("ApiBaseUrl", "Current");
+        const getted = await Database.document.get("ApiBaseUrl", "Current");
         ApiUrl = getted.document;
     }
 };

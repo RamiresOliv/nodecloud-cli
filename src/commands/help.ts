@@ -1,6 +1,8 @@
 exports.run = async (_toolbox, args: string[]) => {
   console.log(_toolbox.print.colors.highlight("NodeCloud-CLI Commands List:"));
-  const files = _toolbox.filesystem.list(__dirname);
+  const files = _toolbox.filesystem
+    .list(__dirname)
+    .filter((child: string) => child.endsWith(".js"));
   const tableItens = [
     [
       _toolbox.print.colors.highlight("Command"),

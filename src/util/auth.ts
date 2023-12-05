@@ -1,25 +1,18 @@
 import { apiDefault } from "./api/default.json";
+import * as Database from "./database";
 
 var ApiUrl = apiDefault; // default
 
 const checkURL = async () => {
-  const r = await require("local-db-express").document.exists(
-    "ApiBaseUrl",
-    "Current"
-  );
+  const r = await Database.document.exists("ApiBaseUrl", "Current");
 
   if (r) {
-    const getted = await require("local-db-express").document.get(
-      "ApiBaseUrl",
-      "Current"
-    );
+    const getted = await Database.document.get("ApiBaseUrl", "Current");
     ApiUrl = getted.document;
   }
 };
 
-const db = require("local-db-express");
-
-db.collection.create("Auth");
+Database.collection.create("Auth");
 
 // Selling this product is not allowed.
 const checkAuthLocal = async (toolbox, token: string) => {
@@ -42,10 +35,13 @@ const checkAuthLocal = async (toolbox, token: string) => {
 export const checkAuth = checkAuthLocal;
 
 export const getAuth = async (toolbox) => {
-  const existence = await db.document.exists("Auth", "MyToken");
+  const existence = await Database.document.exists("Auth", "MyToken");
 
   if (existence) {
-    return { ok: true, token: await db.document.get("Auth", "MyToken") };
+    return {
+      ok: true,
+      token: await Database.document.get("Auth", "MyToken"),
+    };
   } else return { ok: false, code: 404 };
 };
 
@@ -53,18 +49,18 @@ export const registerNewToken = async (toolbox, token: string) => {
   const { ok, data } = await checkAuthLocal(toolbox, token);
   if (ok) {
     if (data.exists) {
-      const existence = await db.document.exists("Auth", "MyToken");
-      await db.document.add(
+      const existence = await Database.document.exists("Auth", "MyToken");
+      await Database.document.add(
         "Auth",
         "NoEdit",
         "Se caso queira editar o seu token faça no comando 'nodecloud login'!"
       );
       if (existence) {
-        db.document.update("Auth", "MyToken", (oldValue) => {
+        Database.document.update("Auth", "MyToken", (oldValue) => {
           return token;
         });
       } else {
-        await db.document.add("Auth", "MyToken", token);
+        await Database.document.add("Auth", "MyToken", token);
       }
       return [ok, data];
     } else {

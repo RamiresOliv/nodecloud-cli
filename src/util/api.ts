@@ -3,6 +3,7 @@ var ApiUrl = apiDefault; // default for tests: http://localhost:2552, for normal
 
 import { createWriteStream, appendFileSync, readFileSync } from "fs";
 import { Tempo } from ".";
+import * as Database from "./database";
 import axios from "axios";
 import * as https from "https";
 
@@ -11,16 +12,10 @@ const agent = new https.Agent({
 });
 
 const checkURL = async () => {
-  const r = await require("local-db-express").document.exists(
-    "ApiBaseUrl",
-    "Current"
-  );
+  const r = await Database.document.exists("ApiBaseUrl", "Current");
 
   if (r) {
-    const getted = await require("local-db-express").document.get(
-      "ApiBaseUrl",
-      "Current"
-    );
+    const getted = await Database.document.get("ApiBaseUrl", "Current");
     ApiUrl = getted.document;
   }
 };

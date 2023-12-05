@@ -1,8 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Exec = exports.Tempo = exports.NodeCloudApi = exports.FileWorker = exports.Functions = exports.Authentification = void 0;
+exports.Exec = exports.Tempo = exports.NodeCloudApi = exports.FileWorker = exports.Database = exports.Functions = exports.Authentification = void 0;
 exports.Authentification = require("./auth");
 exports.Functions = require("./functions");
+exports.Database = __dirname + "/database";
 exports.FileWorker = require("./files");
 exports.NodeCloudApi = require("./api");
 exports.Tempo = require("./temp");

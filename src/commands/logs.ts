@@ -52,7 +52,7 @@ async function tooBig(toolbox, askPrompt, res, needAsk: boolean) {
   }
 }
 
-exports.run = async (toolbox, args) => {
+exports.run = async (toolbox, args: string[]) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Logs"));
 
   setTimeout(async () => {

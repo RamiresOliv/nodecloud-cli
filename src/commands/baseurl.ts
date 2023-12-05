@@ -4,21 +4,62 @@ import {
   Tempo,
   NodeCloudApi,
   Exec,
-} from "../util/index";
-import database from "local-db-express";
+} from "../util";
+import * as apiSettings from "../util/api/default.json";
+import * as Database from "../util/database";
 
 exports.run = async (toolbox, args: string[]) => {
-  database.collection.create("ApiBaseUrl");
+  Database.collection.create("ApiBaseUrl");
   if (
     (args[2] != null && args[2].toLowerCase() == "-rm") ||
     (args[2] != null && args[2].toLowerCase() == "-remove") ||
     (args[2] != null && args[2].toLowerCase() == "-default") ||
     (args[2] != null && args[2].toLowerCase() == "--rm") ||
     (args[2] != null && args[2].toLowerCase() == "--remove") ||
-    (args[2] != null && args[2].toLowerCase() == "--default")
+    (args[2] != null && args[2].toLowerCase() == "--default") ||
+    (args[2] != null && args[2].toLowerCase() == "rm") ||
+    (args[2] != null && args[2].toLowerCase() == "remove") ||
+    (args[2] != null && args[2].toLowerCase() == "default") ||
+    (args[2] != null && args[2].toLowerCase() == "rm") ||
+    (args[2] != null && args[2].toLowerCase() == "remove") ||
+    (args[2] != null && args[2].toLowerCase() == "default")
   ) {
-    await database.document.delete("ApiBaseUrl", "Current");
-    toolbox.print.info("Cleared API baseUrl. And backed to default.");
+    const baseurlrm = await Database.document.delete("ApiBaseUrl", "Current");
+    if (baseurlrm.success) {
+      toolbox.print.info("Cleared API baseUrl. And backed to default.");
+      toolbox.print.info(
+        toolbox.print.colors.green(
+          `BaseUrl removida, agora a BaseUrl será "${apiSettings.apiDefault}" como padrão`
+        )
+      );
+    } else {
+      toolbox.print.error(
+        toolbox.print.colors.red(
+          `BaseUrl já esta no URL padrão "${apiSettings.apiDefault}"`
+        )
+      );
+    }
+    process.exit(0);
+  } else if (
+    (args[2] != null && args[2].toLowerCase() == "--read") ||
+    (args[2] != null && args[2].toLowerCase() == "-read") ||
+    (args[2] != null && args[2].toLowerCase() == "read")
+  ) {
+    const baseurlget = await Database.document.get("ApiBaseUrl", "Current");
+    if (baseurlget.success) {
+      toolbox.print.info(
+        toolbox.print.colors.green(
+          `Current BaseUrl is: "${baseurlget.document}"`
+        )
+      );
+    } else {
+      toolbox.print.info(
+        toolbox.print.colors.yellow(
+          `Nenhuma BaseUrl foi definida! Então estou usando a padrão: "${apiSettings.apiDefault}"`
+        )
+      );
+    }
+    process.exit(0);
   }
   var { baseurl } = await toolbox.prompt.ask([
     {
@@ -28,13 +69,13 @@ exports.run = async (toolbox, args: string[]) => {
     },
   ]);
   if (baseurl.startsWith("http://") || baseurl.startsWith("https://")) {
-    const existence = await database.document.exists("ApiBaseUrl", "Current");
+    const existence = await Database.document.exists("ApiBaseUrl", "Current");
     if (existence) {
-      await database.document.update("ApiBaseUrl", "Current", () => {
+      await Database.document.update("ApiBaseUrl", "Current", () => {
         return baseurl;
       });
     } else {
-      await database.document.add("ApiBaseUrl", "Current", baseurl);
+      await Database.document.add("ApiBaseUrl", "Current", baseurl);
     }
     toolbox.print.info("Added new API baseUrl!");
   } else {
