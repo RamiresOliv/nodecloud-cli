@@ -1,4 +1,4 @@
-import { apiDefault } from "./api/default.json";
+import { apiDefault, paths } from "./api/default.json";
 import * as Database from "./database";
 
 var ApiUrl = apiDefault; // default
@@ -21,7 +21,7 @@ const checkAuthLocal = async (toolbox, token: string) => {
     baseURL: ApiUrl,
   });
   const result = await api.post(
-    "/get/my/auth/@me/check",
+    ApiUrl + paths.auth.check,
     {},
     {
       headers: {

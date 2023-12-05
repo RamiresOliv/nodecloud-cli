@@ -41,7 +41,7 @@ const checkAuthLocal = async (toolbox, token) => {
     const api = toolbox.http.create({
         baseURL: ApiUrl,
     });
-    const result = await api.post("/get/my/auth/@me/check", {}, {
+    const result = await api.post(ApiUrl + default_json_1.paths.auth.check, {}, {
         headers: {
             ["Token"]: token,
         },
