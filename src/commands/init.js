@@ -38,7 +38,6 @@ exports.run = async (toolbox, args) => {
         choices: ["node.js", "python", "ruby"],
       },
     ]);
-    console.log(language);
     var versionToSend;
     if (language == "node.js") {
       res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
@@ -47,7 +46,6 @@ exports.run = async (toolbox, args) => {
       res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
       versionToSend = res.data[1]["latest"];
     } else if (language == "ruby") {
-      console.log("sdgsdfsdfghsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfg");
       res = await NodeCloudApi.api.get.bin.getRubyVersion(toolbox);
       versionToSend = res.data[0]["latest"];
     }

@@ -6,25 +6,10 @@ const {
   Exec,
 } = require("../util");
 
-function formatBytes(bytes, decimals = 2) {
-  if (!+bytes) return "0 Bytes";
-
-  const k = 1024;
-  const dm = decimals < 0 ? 0 : decimals;
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
-}
-
 exports.run = async (toolbox, args) => {
-  toolbox.print.info(toolbox.print.colors.dim("Processo: AppsInfo"));
+  toolbox.print.info(toolbox.print.colors.dim("Processo: AppInfo"));
 
-  toolbox.print.info(
-    toolbox.print.colors.bold(toolbox.print.colors.cyan("app - UNDER DEV"))
-  );
-  /*setTimeout(async () => {
+  setTimeout(async () => {
     const { ok, token } = await Authentification.getAuth(toolbox);
     if (!ok) {
       return toolbox.print.error(
@@ -49,7 +34,9 @@ exports.run = async (toolbox, args) => {
         }
         if (!resGetProjects.data.ok) {
           toolbox.print.error(
-            toolbox.print.colors.red(resGetProjects.data.msg || resGetProjects.data)
+            toolbox.print.colors.red(
+              resGetProjects.data.msg || resGetProjects.data
+            )
           );
           process.kill(0);
         }
@@ -61,73 +48,106 @@ exports.run = async (toolbox, args) => {
           );
           process.kill(0);
         }
-        toolbox.print.highlight("Suas aplicações:");
-        toolbox.print.muted("(Isso pode demorar um pouco..)");
-        toolbox.print.muted("");
-        totalofRuns = 0;
-        setTimeout(async () => {
-          toolbox.print.info("-".repeat(100));
-          resGetProjects.data.returns.forEach((value) => {
-            NodeCloudApi.api.post.bin
-              .getProjectInfo(toolbox, value, token.document)
-              .then(async (res) => {
-                if (!res || res.data.ok) {
-                  let line = "";
-                  line += toolbox.print.colors.cyan(value + ":") + "\n";
-                  let status = toolbox.print.colors.red("OFFLINE");
-                  if (
-                    res.data.return.projectInfos.status
-                      .toLowerCase()
-                      .includes("online")
+        const askProjects = {
+          type: "select",
+          name: "Project",
+          message: "Qual o seu projeto que você deseja efetuar um commit?",
+          choices: resGetProjects.data.returns,
+        };
+        const askPrompt = await toolbox.prompt.ask([askProjects]);
+
+        const spinner1 = new toolbox.print.spin(
+          toolbox.print.colors.cyan(
+            "Continuando trabalho na Cloud..." +
+              toolbox.print.colors.muted(
+                " ☁️ Agora é só relaxar, nós cuidamos disso!  "
+              )
+          )
+        );
+        NodeCloudApi.api.post.bin
+          .getProjectInfo(toolbox, askPrompt.Project, token.document)
+          .then(async (res) => {
+            if (!res || res.data.ok) {
+              spinner1.succeed(
+                toolbox.print.colors.green(
+                  "Continuando trabalho na Cloud..." +
+                    toolbox.print.colors.muted(
+                      " ☁️ Agora é só relaxar, nós cuidamos disso!  "
+                    )
+                )
+              );
+              toolbox.print.info("-".repeat(100));
+              toolbox.print.highlight(`${askPrompt.Project}:`);
+              toolbox.print.info(
+                toolbox.print.colors.muted(
+                  res.data.return.projectInfos.description || "Cool App"
+                )
+              );
+              let status = toolbox.print.colors.red("OFFLINE");
+              if (
+                res.data.return.projectInfos.status
+                  .toLowerCase()
+                  .includes("online")
+              )
+                status = toolbox.print.colors.green("ONLINE");
+              toolbox.print.info("Stado: " + status);
+              toolbox.print.info(
+                "Linguagem: " +
+                  toolbox.print.colors.muted(
+                    res.data.return.configFile.LANGUAGE
                   )
-                    status = toolbox.print.colors.green("ONLINE");
-                  line += status;
-                  line += ` | Tamanho: ${toolbox.print.colors.muted(
-                    `"` + res.data.return.projectInfos.size + `"`
-                  )}`;
+              );
+              toolbox.print.info(
+                "Versão: " +
+                  toolbox.print.colors.muted(
+                    "v" + res.data.return.configFile.VERSION
+                  )
+              );
+              toolbox.print.info(
+                "Starter: " +
+                  toolbox.print.colors.muted(res.data.return.configFile.START)
+              );
 
-                  toolbox.print.info(line + "\n" + "-".repeat(100));
-                } else {
-                  if (res.data.errcode == 500) {
-                    spinner1.fail(
-                      toolbox.print.colors.red(
-                        "Ocorreu algum problema com a Cloud!" +
-                          toolbox.print.colors.muted(
-                            " ☁️ Tente novamente mais tarde! Desculpe :<"
-                          )
-                      )
-                    );
-                    process.kill(0);
-                  } else {
-                    spinner1.fail(
-                      toolbox.print.colors.red(
-                        res.data.message +
-                          toolbox.print.colors.muted(
-                            " ☁️ Tente novamente mais tarde! Desculpe :<"
-                          )
-                      )
-                    );
-                    process.kill(0);
-                  }
-                }
+              toolbox.print.info(
+                "Tamanho: " +
+                  toolbox.print.colors.muted(
+                    `${res.data.return.projectInfos.size}`
+                  )
+              );
 
-                totalofRuns += 1;
-                if (totalofRuns == resGetProjects.data.returns.length) {
-                  toolbox.print.muted("");
-                  toolbox.print.muted(
-                    "Mais informações sobre as aplicações podem ser vistas aqui quando ligadas!"
-                  );
-                  toolbox.print.muted(
-                    "Se deseja ver mais informações sobre uma aplicação use " +
-                      toolbox.print.colors.yellow("nodecloud") +
-                      " app"
-                  );
-                }
-              });
+              toolbox.print.info(
+                toolbox.print.colors.muted(
+                  "Algumas dessas informações foram pegas do Docker e o arquivo 'cloud.config'"
+                )
+              );
+              toolbox.print.info("-".repeat(100));
+              process.kill(0);
+            } else {
+              if (res.data.errcode == 500) {
+                spinner1.fail(
+                  toolbox.print.colors.red(
+                    "Ocorreu algum problema com a Cloud!" +
+                      toolbox.print.colors.muted(
+                        " ☁️ Tente novamente mais tarde! Desculpe :<"
+                      )
+                  )
+                );
+                process.kill(0);
+              } else {
+                spinner1.fail(
+                  toolbox.print.colors.red(
+                    res.data.message +
+                      toolbox.print.colors.muted(
+                        " ☁️ Tente novamente mais tarde! Desculpe :<"
+                      )
+                  )
+                );
+                process.kill(0);
+              }
+            }
           });
-        }, 1200);
       });
-  }, 2000);*/
+  }, 2000);
 };
 
 exports.config = {
