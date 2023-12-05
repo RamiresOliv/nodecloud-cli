@@ -51,7 +51,8 @@ exports.run = async (toolbox, args) => {
         const askProjects = {
           type: "select",
           name: "Project",
-          message: "Qual o seu projeto que você deseja efetuar um commit?",
+          message:
+            "Qual o seu projeto que você deseja ver informações mais detalhadas?",
           choices: resGetProjects.data.returns,
         };
         const askPrompt = await toolbox.prompt.ask([askProjects]);
@@ -117,7 +118,7 @@ exports.run = async (toolbox, args) => {
 
               toolbox.print.info(
                 toolbox.print.colors.muted(
-                  "Algumas dessas informações foram pegas do Docker e o arquivo 'cloud.config'"
+                  'Essas informações são do Docker e do arquivo "cloud.config" de sua aplicação.'
                 )
               );
               toolbox.print.info("-".repeat(100));
