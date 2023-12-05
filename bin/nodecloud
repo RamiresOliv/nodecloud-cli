@@ -10,7 +10,10 @@ process.argv[1] = __dirname.replace("\\", "/") + "/.."; // <- nodecloud-root
 
 const { exec } = require("child_process");
 const package = require("../package.json");
+const ejs = require("ejs");
 const toolbox = require("gluegun");
+
+toolbox.EJS = ejs;
 
 const title = "NodeCloud-CLI [BIN]";
 /*
@@ -42,8 +45,8 @@ main = async () => {
   exec(`$host.UI.RawUI.WindowTitle = "${title}"`);
 
   // Render in cli.js
-  require("../src/cli")
-    .cli(process.argv, {
+  require("../build/cli")
+    .cli(process.argv, toolbox, {
       child_proccess: require("child_process"),
     })
     .then((result) => {

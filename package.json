@@ -1,9 +1,10 @@
 {
   "name": "nodecloud-cli",
-  "version": "2.4.5",
+  "version": "2.4.8",
   "versionType": "alpha",
   "description": "This CLI is used for the nodecloud possibiliting make everthing remotely!",
   "main": "bin/nodecloud",
+  "types": "src/index.d.ts",
   "bin": {
     "nodecloudcli": "bin/nodecloud",
     "node-cloud": "bin/nodecloud",
@@ -28,10 +29,13 @@
     "archiver": "^5.3.1",
     "axios": "^1.1.3",
     "ejs": "^3.1.8",
-    "gluegun": "^5.1.2",
-    "local-db-express": "^1.5.2"
+    "gluegun": "^5.1.2"
   },
   "directories": {
     "test": "tests"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.3",
+    "local-db-express": "^1.7.3"
   }
 }

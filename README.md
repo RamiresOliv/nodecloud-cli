@@ -29,16 +29,10 @@ Usando a CLI você pode fazer tudo oque você fazia pelo Discord mas agora pela 
 
 ## Começando
 
-Começe configurando o API URL da NodeCloud. Você pode achar no Servidor da NodeCloud.
-
-```sh
-$ nodecloud api
-```
-
-Então depois, crie um Token API usando o comando `api` no chat de comandos do bot no servidor da NodeCloud, e cole-o no comando,
+Primeiro crie um Token API usando o comando `api` no chat de comandos do bot no servidor da NodeCloud, e cole-o no comando,
 
 ```sh
 $ nodecloud login
 ```
 
-Agora você está pronto para começar a usar a CLI! Bons desenvolvimentos!
+E agora você está pronto para começar a usar a CLI! Bons desenvolvimentos!

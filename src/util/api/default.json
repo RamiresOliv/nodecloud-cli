@@ -1,0 +1,19 @@
+{
+  "apiDefault": "https://nodecloud-api.ramiresoliv.repl.co",
+  "testApiDefault": "http://localhost:2552",
+
+  "paths": {
+    "auth": {
+      "check": "/api/auth/check"
+    },
+    "ping": "/api/ping",
+    "upload": "/api/upload",
+    "commit": "/api/commit",
+    "delete": "/api/delete",
+    "start": "/api/start",
+    "stop": "/api/stop",
+    "getLogs": "/api/getLogs",
+    "getApp": "/api/getApp",
+    "getApps": "/api/getApps"
+  }
+}
