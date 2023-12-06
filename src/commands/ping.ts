@@ -15,6 +15,7 @@ exports.run = async (toolbox, args: string[]) => {
   if (ok) {
     var result = (dataOld.getTime() - dataNew.getTime()) * -1;
     spinner.succeed("🏓 Pong! Latência de " + result + "MS");
+
     if (args[2] && args[2].toLowerCase() == "--debug") {
       toolbox.print.muted("[DEBUG] HTTP RESPONSE: " + data);
     }
@@ -27,9 +28,8 @@ exports.run = async (toolbox, args: string[]) => {
     process.kill(0);
   } else {
     spinner.fail("Falha em tentar receber o ping...");
-    if (args[2] && args[2].toLowerCase() == "--debug") {
-      toolbox.print.muted("[DEBUG] HTTP RESPONSE: " + data);
-    }
+    toolbox.print.muted(`[DEBUG] HTTP RESPONSE: ${data}`);
+
     process.kill(0);
   }
 };
