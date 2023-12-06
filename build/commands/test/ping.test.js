@@ -20,9 +20,7 @@ const run = async (toolbox, args) => {
     }
     else {
         spinner.fail("Falha em tentar receber o ping...");
-        if (args[2] && args[2].toLowerCase() === "--debug") {
-            toolbox.print.muted(`[DEBUG] HTTP RESPONSE: ${data}`);
-        }
+        toolbox.print.muted(`[DEBUG] HTTP RESPONSE: ${data}`);
         process.exit(0);
     }
 };

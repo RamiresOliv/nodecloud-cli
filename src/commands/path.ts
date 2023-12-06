@@ -1,4 +1,4 @@
-const { exec } = require("child_process");
+import { exec } from "child_process";
 
 exports.run = async (toolbox, args: string[]) => {
   exec("cd " + __dirname + "/../.." + " && start .");
