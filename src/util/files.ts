@@ -22,13 +22,13 @@ export const readConfigFile = async (toolbox: any, FilePath: string) => {
 
     readded.IGNOREDS = JSON.parse(readded.IGNOREDS);
 
-    for (let item of readded) {
+    for (let item in readded) {
       if (typeof readded[item] == "string")
         readded[item] = readded[item].replace('"', "").replace('"', "");
       else if (Array.isArray(readded[item]))
         for (let i of readded[item]) {
           if (typeof readded[item] == "string")
-            item[i] = item[i].replace('"', "").replace('"', "");
+            readded[item[i]] = item[i].replace('"', "").replace('"', "");
         }
     }
     return { data: [true, "success"], return: readded };
