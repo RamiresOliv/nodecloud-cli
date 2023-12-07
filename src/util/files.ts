@@ -142,7 +142,7 @@ export const createProjectZipFile = async (
   targetName: string
 ) => {
   let outputFile = createWriteStream(targetPath + "/" + targetName + ".zip");
-  let archive = toolbox.archiver.archiver("zip");
+  let archive = toolbox.archiver("zip");
 
   archive.on("error", function (err: Error) {
     throw err;

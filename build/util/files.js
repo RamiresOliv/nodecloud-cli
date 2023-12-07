@@ -118,7 +118,7 @@ const createConfigFile = async (toolbox, Settings, AppPath) => {
 exports.createConfigFile = createConfigFile;
 const createProjectZipFile = async (toolbox, toZipPath, targetPath, targetName) => {
     let outputFile = (0, fs_1.createWriteStream)(targetPath + "/" + targetName + ".zip");
-    let archive = toolbox.archiver.archiver("zip");
+    let archive = toolbox.archiver("zip");
     archive.on("error", function (err) {
         throw err;
     });
