@@ -109,10 +109,10 @@ if (!existsSync(config_file_path)) {
   writeFileSync(config_file_path, JSON.stringify(default_configs));
 }
 
-var getconfig = require(config_file_path);
+let getconfig = require(config_file_path);
 
-var exportation = getconfig.exportation;
-var globalBase = getconfig.global;
+let exportation = getconfig.exportation;
+let globalBase = getconfig.global;
 
 if (!existsSync(project_root + globalBase.datastorage_folder)) {
   mkdirSync(project_root + globalBase.datastorage_folder);
@@ -126,19 +126,19 @@ if (!globalBase) globalBase = default_configs.globalBase;
 if (!exportation) exportation = default_configs.exportation;
 
 let CurrentCollectionName = "test";
-const add = async (name, data) => {
+const add = async (name: string, data: any) => {
   return await exports.document.add(CurrentCollectionName, name, data);
 };
-const update = async (name, data) => {
+const update = async (name: string, data: any) => {
   return await exports.document.update(CurrentCollectionName, name, data);
 };
-const get = async (name) => {
+const get = async (name: string) => {
   return await exports.document.get(CurrentCollectionName, name);
 };
-const del = async (name) => {
+const del = async (name: string) => {
   return await exports.document.delete(CurrentCollectionName, name);
 };
-const exists = async (name) => {
+const exists = async (name: string) => {
   return await exports.document.exists(CurrentCollectionName, name);
 };
 
@@ -177,7 +177,7 @@ if (
 
 // Collections workers
 
-export const collection_create = async (CollectionName) => {
+export const collection_create = async (CollectionName: string) => {
   if (!CollectionName || typeof CollectionName != "string") {
     return {
       success: false,
@@ -227,7 +227,7 @@ export const collection_create = async (CollectionName) => {
   }
 };
 
-export const collection_delete = async (CollectionName) => {
+export const collection_delete = async (CollectionName: string) => {
   if (!CollectionName || typeof CollectionName != "string") {
     return {
       success: false,
@@ -263,11 +263,11 @@ export const collection_delete = async (CollectionName) => {
       exportation.export_folder +
       "/" +
       CollectionName
-  ).filter((file) =>
+  ).filter((file: string) =>
     file.endsWith("." + exportation.file_type.replace(".", ""))
   );
 
-  documents.forEach((v) => {
+  documents.forEach((v: string) => {
     unlinkSync(
       project_root +
         "/" +
@@ -297,7 +297,7 @@ export const collection_delete = async (CollectionName) => {
     message: systemMessages.messages.CollectionDeleted,
   };
 };
-export const collection_clear = async (CollectionName) => {
+export const collection_clear = async (CollectionName: string) => {
   if (!CollectionName || typeof CollectionName != "string") {
     return {
       success: false,
@@ -334,7 +334,7 @@ export const collection_clear = async (CollectionName) => {
       "/" +
       CollectionName
   );
-  documents.forEach((v, i) => {
+  documents.forEach((v: string, i: number) => {
     unlinkSync(
       project_root +
         "/" +
@@ -359,7 +359,7 @@ export const collection_clear = async (CollectionName) => {
     docExists: exists,
   };
 };
-export const collection_length = async (CollectionName) => {
+export const collection_length = async (CollectionName: string) => {
   if (!CollectionName || typeof CollectionName != "string") {
     return {
       success: false,
@@ -394,7 +394,7 @@ export const collection_length = async (CollectionName) => {
       exportation.export_folder +
       "/" +
       CollectionName
-  ).filter((file) =>
+  ).filter((file: string) =>
     file.endsWith("." + exportation.file_type.replace(".", ""))
   );
   let count = 0;
@@ -403,7 +403,7 @@ export const collection_length = async (CollectionName) => {
   });
   return count;
 };
-export const collection_exists = async (CollectionName) => {
+export const collection_exists = async (CollectionName: string) => {
   if (!CollectionName || typeof CollectionName != "string") {
     return {
       success: false,
@@ -531,11 +531,11 @@ export const collection = {
         exportation.export_folder +
         "/" +
         CollectionName
-    ).filter((file) =>
+    ).filter((file: string) =>
       file.endsWith("." + exportation.file_type.replace(".", ""))
     );
 
-    documents.forEach((v) => {
+    documents.forEach((v: string) => {
       unlinkSync(
         project_root +
           "/" +
@@ -602,7 +602,7 @@ export const collection = {
         "/" +
         CollectionName
     );
-    documents.forEach((v, i) => {
+    documents.forEach((v: string, i: number) => {
       unlinkSync(
         project_root +
           "/" +
@@ -662,7 +662,7 @@ export const collection = {
         exportation.export_folder +
         "/" +
         CollectionName
-    ).filter((file) =>
+    ).filter((file: string) =>
       file.endsWith("." + exportation.file_type.replace(".", ""))
     );
     let count = 0;
@@ -881,7 +881,7 @@ export const document = {
       message: systemMessages.messages.Done,
     };
   },
-  update: async (Collection: string, classification: string, changer) => {
+  update: async (Collection: string, classification: string, changer: any) => {
     if (typeof changer != "function") {
       return {
         success: false,
@@ -1124,12 +1124,12 @@ export const mapAll = async () => {
       withFileTypes: true,
     }
   )
-    .filter((item) => item.isDirectory())
-    .map((dirent) => dirent.name);
+    .filter((item: any) => item.isDirectory())
+    .map((dirent: any) => dirent.name);
 
-  const conclusion = {};
+  const conclusion: Record<string, string[]> = {};
 
-  collections.forEach((collection) => {
+  collections.forEach((collection: string) => {
     conclusion[collection] = [];
     const documents = readdirSync(
       project_root +
@@ -1139,10 +1139,10 @@ export const mapAll = async () => {
         exportation.export_folder +
         "/" +
         collection
-    ).filter((item) =>
+    ).filter((item: string) =>
       item.endsWith("." + exportation.file_type.replace(".", ""))
     );
-    documents.forEach((doc) => {
+    documents.forEach((doc: string) => {
       conclusion[collection].push(doc);
     });
   });

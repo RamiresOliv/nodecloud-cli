@@ -6,7 +6,23 @@ import {
   Exec,
 } from "../util/index";
 
-const defaultConfigs = {
+interface resume {
+  "node.js": string;
+  python: string;
+  ruby: string;
+}
+interface DefaultConfigs {
+  name: string;
+  language: string;
+  main: {
+    default: string;
+    "node.js": string;
+    python: string;
+    ruby: string;
+  };
+}
+
+const defaultConfigs: DefaultConfigs = {
   name: "mycoolapp",
   language: "node.js",
   main: {
@@ -17,13 +33,13 @@ const defaultConfigs = {
   },
 };
 
-const resume = {
-  ["python"]: "py",
+const resume: resume = {
   ["node.js"]: "js",
+  ["python"]: "py",
   ["ruby"]: "rb",
 };
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   if (args[2] == "--read") {
     const r = await FileWorker.readConfigFile(toolbox, args[0]);
     if (r[0] == false) {
@@ -44,7 +60,7 @@ exports.run = async (toolbox, args: string[]) => {
         choices: ["node.js", "python", "ruby"],
       },
     ]);
-    var versionToSend;
+    let versionToSend;
     if (language == "node.js") {
       const res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
       versionToSend = res.data[0].version.replace("v", "");
@@ -61,7 +77,7 @@ exports.run = async (toolbox, args: string[]) => {
         name: defaultConfigs.name.toLowerCase(),
         lan: language,
         version: versionToSend,
-        main: defaultConfigs.main[language],
+        main: defaultConfigs.main[language as keyof typeof defaultConfigs.main],
       }, // 1 2 3
       args[0]
     );
@@ -76,7 +92,7 @@ exports.run = async (toolbox, args: string[]) => {
     );
     return process.kill(0);
   } else if (args[2] == "-y") {
-    var languageToGo;
+    let languageToGo;
     if (FileWorker.fileExists(toolbox, args[0], "main.py")) {
       languageToGo = "python";
     } else if (FileWorker.fileExists(toolbox, args[0], "main.rb")) {
@@ -84,7 +100,7 @@ exports.run = async (toolbox, args: string[]) => {
     } else {
       languageToGo = defaultConfigs.language;
     }
-    var versionToSend;
+    let versionToSend;
     if (languageToGo == "node.js") {
       const res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
       versionToSend = res.data[0].version.replace("v", "");
@@ -101,7 +117,9 @@ exports.run = async (toolbox, args: string[]) => {
         name: defaultConfigs.name.toLowerCase(),
         lan: languageToGo,
         version: versionToSend,
-        main: defaultConfigs.main[languageToGo],
+        main: defaultConfigs.main[
+          languageToGo as keyof typeof defaultConfigs.main
+        ],
       }, // 1 2 3
       args[0]
     );
@@ -137,7 +155,7 @@ exports.run = async (toolbox, args: string[]) => {
       choices: ["node.js", "python", "ruby"],
     },
   ]);
-  var versionsGetRes = [];
+  let versionsGetRes: unknown[] = [];
   if (language == "node.js") {
     const res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
     toolbox.print.info(
@@ -152,8 +170,8 @@ exports.run = async (toolbox, args: string[]) => {
         'Não achou a versão que precisa? Use a opção "Manual" para digitar manualmente.'
       )
     );
-    var times = 0;
-    res.data.forEach((version) => {
+    let times = 0;
+    res.data.forEach((version: any) => {
       if (times <= 13) {
         versionsGetRes.push(version["version"].replace("v", ""));
       }
@@ -162,13 +180,13 @@ exports.run = async (toolbox, args: string[]) => {
     versionsGetRes.push("Manual");
   } else if (language == "python") {
     const res = await NodeCloudApi.api.get.bin.getPythonVersion(toolbox);
-    res.data.forEach((version) => {
+    res.data.forEach((version: any) => {
       versionsGetRes.push(version["latest"]);
     });
     versionsGetRes.shift();
   } else if (language == "ruby") {
     const res = await NodeCloudApi.api.get.bin.getRubyVersion(toolbox);
-    res.data.forEach((version) => {
+    res.data.forEach((version: any) => {
       versionsGetRes.push(version["latest"]);
     });
     //versionToSend = res.data[0]["latest"];
@@ -201,7 +219,7 @@ exports.run = async (toolbox, args: string[]) => {
       name: "mainSelect",
       message:
         "Porfavor insira o nome do arquivo de inicialização. (input_vazio = " +
-        defaultConfigs.main[language] +
+        defaultConfigs.main[language as keyof typeof defaultConfigs.main] +
         ")",
     },
   ]);
@@ -217,15 +235,16 @@ exports.run = async (toolbox, args: string[]) => {
     process.kill(0);
   }
   if (mainSelect == "") {
-    mainSelect = defaultConfigs.main[language];
+    mainSelect =
+      defaultConfigs.main[language as keyof typeof defaultConfigs.main];
   }
-  var main = mainSelect;
-  if (!mainSelect.endsWith("." + resume[language])) {
-    main = mainSelect + "." + resume[language];
+  let main = mainSelect;
+  if (!mainSelect.endsWith("." + resume[language as keyof typeof resume])) {
+    main = mainSelect + "." + resume[language as keyof typeof resume];
   }
 
   /*if (version == null || version == "") {
-    var gettedVersion;
+    let gettedVersion;
     if (language == "node.js") {
       res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
       gettedVersion = res.data[0].version.replace("v", "");
@@ -245,7 +264,7 @@ exports.run = async (toolbox, args: string[]) => {
       toolbox,
       { name: name.toLowerCase(), lan: language, main: main, version: version }, // 1 2 3
       args[0]
-    ).then((ok, data) => {
+    ).then(() => {
       loading.succeed(
         toolbox.print.colors.green(
           'Arquivo de configuração da Cloud "cloud.config", foi criado.'
@@ -261,7 +280,7 @@ exports.run = async (toolbox, args: string[]) => {
   }, 3000);
 };
 
-exports.config = {
+export const config = {
   name: "init",
   description: "Create a new Cloud config file.",
   aliases: ["i", "inicializar"],

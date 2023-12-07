@@ -1,5 +1,5 @@
 import { apiDefault, paths } from "./api/default.json"; //const { apiDefault } = require("./api/default.json");
-var ApiUrl = apiDefault; // default for tests: http://localhost:2552, for normal use: https://nodecloud-api.ramiresoliv.repl.co
+let ApiUrl = apiDefault; // default for tests: http://localhost:2552, for normal use: https://nodecloud-api.ramiresoliv.repl.co
 
 import { createWriteStream, appendFileSync, readFileSync } from "fs";
 import { Tempo } from ".";
@@ -22,7 +22,7 @@ const checkURL = async () => {
 export const api = {
   post: {
     bin: {
-      getProjectInfo: async (toolbox, AppName, token) => {
+      getProjectInfo: async (toolbox: any, AppName: string, token: string) => {
         await checkURL();
         const api = toolbox.http.create({
           baseURL: ApiUrl,
@@ -38,7 +38,7 @@ export const api = {
         );
         return result;
       },
-      getMyProjects: async (toolbox, token) => {
+      getMyProjects: async (toolbox: any, token: string) => {
         await checkURL();
         const api = toolbox.http.create({
           baseURL: ApiUrl,
@@ -56,7 +56,7 @@ export const api = {
       },
     },
 
-    ping: async (toolbox) => {
+    ping: async (toolbox: any) => {
       await checkURL();
       const api = toolbox.http.create({
         baseURL: ApiUrl,
@@ -64,7 +64,12 @@ export const api = {
       const result = api.post(paths.ping);
       return result;
     },
-    up: async (toolbox, CompactedProjectPath, fileName, token) => {
+    up: async (
+      toolbox: any,
+      CompactedProjectPath: string,
+      fileName: string,
+      token: string
+    ) => {
       await checkURL();
       /*const api = toolbox.http.create({
         baseURL: ApiUrl,
@@ -97,11 +102,11 @@ export const api = {
       return result;
     },
     commit: async (
-      toolbox,
-      CompactedProjectPath,
-      fileName,
-      projectName,
-      token
+      toolbox: any,
+      CompactedProjectPath: string,
+      fileName: string,
+      projectName: string,
+      token: string
     ) => {
       await checkURL();
       /*const api = toolbox.http.create({
@@ -125,7 +130,7 @@ export const api = {
       );
       return result;
     },
-    delete: async (toolbox, AppName, token) => {
+    delete: async (toolbox: any, AppName: string, token: string) => {
       await checkURL();
       const api = toolbox.http.create({
         baseURL: ApiUrl,
@@ -142,7 +147,7 @@ export const api = {
       return result;
     },
     restart: Function,
-    start: async (toolbox, AppName, token) => {
+    start: async (toolbox: any, AppName: string, token: string) => {
       await checkURL();
       const api = toolbox.http.create({
         baseURL: ApiUrl,
@@ -158,7 +163,7 @@ export const api = {
       );
       return result;
     },
-    stop: async (toolbox, AppName, token) => {
+    stop: async (toolbox: any, AppName: string, token: string) => {
       await checkURL();
       const api = toolbox.http.create({
         baseURL: ApiUrl,
@@ -176,7 +181,7 @@ export const api = {
     },
     apps: Function,
     app: Function,
-    logs: async (toolbox, AppName, token) => {
+    logs: async (toolbox: any, AppName: string, token: string) => {
       await checkURL();
       const api = toolbox.http.create({
         baseURL: ApiUrl,
@@ -216,7 +221,7 @@ export const api = {
   },
   get: {
     bin: {
-      getNodeVersion: async (toolbox) => {
+      getNodeVersion: async (toolbox: any) => {
         await checkURL();
         const api = toolbox.http.create({
           baseURL: "https://nodejs.org",
@@ -224,7 +229,7 @@ export const api = {
         const result = await api.get("/dist/index.json");
         return result;
       },
-      getPythonVersion: async (toolbox) => {
+      getPythonVersion: async (toolbox: any) => {
         await checkURL();
         const api = toolbox.http.create({
           baseURL: "https://endoflife.date",
@@ -232,7 +237,7 @@ export const api = {
         const result = await api.get("/api/python.json");
         return result;
       },
-      getRubyVersion: async (toolbox) => {
+      getRubyVersion: async (toolbox: any) => {
         await checkURL();
         const api = toolbox.http.create({
           baseURL: "https://endoflife.date",

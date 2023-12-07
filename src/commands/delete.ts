@@ -5,7 +5,7 @@ const {
   NodeCloudApi,
 } = require("../util");
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Delete"));
 
   setTimeout(async () => {
@@ -22,7 +22,7 @@ exports.run = async (toolbox, args: string[]) => {
     }
     NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
-      .then(async (resGetProjects) => {
+      .then(async (resGetProjects: any) => {
         if (!resGetProjects.data) {
           toolbox.print.error(
             toolbox.print.colors.red(
@@ -95,7 +95,7 @@ exports.run = async (toolbox, args: string[]) => {
         setTimeout(async () => {
           NodeCloudApi.api.post
             .delete(toolbox, askPrompt.Project, token.document)
-            .then((res) => {
+            .then((res: any) => {
               if (res.data && res.data.ok) {
                 spinner1.succeed(
                   toolbox.print.colors.green(
@@ -154,7 +154,7 @@ exports.run = async (toolbox, args: string[]) => {
   }, 2000);
 };
 
-exports.config = {
+export const config = {
   name: "delete",
   description: "Delete a application remotly in the Cloud.",
   aliases: ["d", "del", "deletar"],

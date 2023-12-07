@@ -6,7 +6,7 @@ import {
   Exec,
 } from "../util/index";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: AppInfo"));
 
   setTimeout(async () => {
@@ -23,7 +23,7 @@ exports.run = async (toolbox, args: string[]) => {
     }
     NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
-      .then(async (resGetProjects) => {
+      .then(async (resGetProjects: any) => {
         if (!resGetProjects.data) {
           toolbox.print.error(
             toolbox.print.colors.red(
@@ -67,7 +67,7 @@ exports.run = async (toolbox, args: string[]) => {
         );
         NodeCloudApi.api.post.bin
           .getProjectInfo(toolbox, askPrompt.Project, token.document)
-          .then(async (res) => {
+          .then(async (res: any) => {
             if (!res || res.data.ok) {
               spinner1.succeed(
                 toolbox.print.colors.green(
@@ -151,7 +151,7 @@ exports.run = async (toolbox, args: string[]) => {
   }, 2000);
 };
 
-exports.config = {
+export const config = {
   name: "app",
   description: "Show informations about an specific app.",
   aliases: ["a", "appinfo", "inspect"],

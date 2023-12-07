@@ -28,7 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.api = void 0;
 const default_json_1 = require("./api/default.json"); //const { apiDefault } = require("./api/default.json");
-var ApiUrl = default_json_1.apiDefault; // default for tests: http://localhost:2552, for normal use: https://nodecloud-api.ramiresoliv.repl.co
+let ApiUrl = default_json_1.apiDefault; // default for tests: http://localhost:2552, for normal use: https://nodecloud-api.ramiresoliv.repl.co
 const fs_1 = require("fs");
 const _1 = require(".");
 const Database = __importStar(require("./database"));

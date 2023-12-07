@@ -1,6 +1,6 @@
 import { exec } from "child_process";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   toolbox.print.muted(
     `nodecloud-cli V` +
       require("../../package.json").version +
@@ -13,12 +13,14 @@ exports.run = async (toolbox, args: string[]) => {
   );
   const loading = toolbox.print.spin("Aguarde...");
   if (confirmation) {
-    const child = exec("npm update -g " + require("../../package.json").name);
+    const child: any = exec(
+      "npm update -g " + require("../../package.json").name
+    );
     let err = "";
-    child.stderr.on("data", (data) => {
+    child.stderr.on("data", (data: string) => {
       err += data;
     });
-    child.on("exit", function (code, signal) {
+    child.on("exit", function (code: number) {
       if (code != 0) {
         loading.fail(toolbox.print.colors.red(`FAIL: code: ${code}`));
         toolbox.print.error(err);
@@ -44,7 +46,7 @@ exports.run = async (toolbox, args: string[]) => {
   }
 };
 
-exports.config = {
+export const config = {
   name: "update",
   description: "Updates the NPM Module to the latest version.",
   aliases: [],

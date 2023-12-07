@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const index_1 = require("../util/index");
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     toolbox.print.info(toolbox.print.colors.dim("Processo: Commit"));
     toolbox.print.info(toolbox.print.colors.cyan("Começando..."));
     const { ok, token } = await index_1.Authentification.getAuth(toolbox);
@@ -63,7 +64,7 @@ exports.run = async (toolbox, args) => {
                 process.kill(0);
             }
             else if (!response[0] && response[1] == 404) {
-                var msg = "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
+                let msg = "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
                 if (response[2])
                     msg += "TIP: " + response[2];
                 spinner1.fail(toolbox.print.colors.red(msg));
@@ -117,6 +118,7 @@ exports.run = async (toolbox, args) => {
         }, 2000);
     });
 };
+exports.run = run;
 exports.config = {
     name: "commit",
     description: "Executes a remote commit request to the Cloud.",

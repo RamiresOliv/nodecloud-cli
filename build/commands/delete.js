@@ -1,5 +1,8 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const { FileWorker, Authentification, Tempo, NodeCloudApi, } = require("../util");
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     toolbox.print.info(toolbox.print.colors.dim("Processo: Delete"));
     setTimeout(async () => {
         const { ok, token } = await Authentification.getAuth(toolbox);
@@ -87,6 +90,7 @@ exports.run = async (toolbox, args) => {
         });
     }, 2000);
 };
+exports.run = run;
 exports.config = {
     name: "delete",
     description: "Delete a application remotly in the Cloud.",

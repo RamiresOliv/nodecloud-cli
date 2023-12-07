@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const index_1 = require("../util/index");
 const defaultConfigs = {
     name: "mycoolapp",
@@ -12,11 +13,11 @@ const defaultConfigs = {
     },
 };
 const resume = {
-    ["python"]: "py",
     ["node.js"]: "js",
+    ["python"]: "py",
     ["ruby"]: "rb",
 };
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     if (args[2] == "--read") {
         const r = await index_1.FileWorker.readConfigFile(toolbox, args[0]);
         if (r[0] == false) {
@@ -35,7 +36,7 @@ exports.run = async (toolbox, args) => {
                 choices: ["node.js", "python", "ruby"],
             },
         ]);
-        var versionToSend;
+        let versionToSend;
         if (language == "node.js") {
             const res = await index_1.NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
             versionToSend = res.data[0].version.replace("v", "");
@@ -60,7 +61,7 @@ exports.run = async (toolbox, args) => {
         return process.kill(0);
     }
     else if (args[2] == "-y") {
-        var languageToGo;
+        let languageToGo;
         if (index_1.FileWorker.fileExists(toolbox, args[0], "main.py")) {
             languageToGo = "python";
         }
@@ -70,7 +71,7 @@ exports.run = async (toolbox, args) => {
         else {
             languageToGo = defaultConfigs.language;
         }
-        var versionToSend;
+        let versionToSend;
         if (languageToGo == "node.js") {
             const res = await index_1.NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
             versionToSend = res.data[0].version.replace("v", "");
@@ -113,14 +114,14 @@ exports.run = async (toolbox, args) => {
             choices: ["node.js", "python", "ruby"],
         },
     ]);
-    var versionsGetRes = [];
+    let versionsGetRes = [];
     if (language == "node.js") {
         const res = await index_1.NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
         toolbox.print.info(toolbox.print.colors.yellow("Node.js: Jesus.. Total de " +
             res.data.length +
             " versões achadas!! Mas só 12 foram listadas."));
         toolbox.print.info(toolbox.print.colors.muted('Não achou a versão que precisa? Use a opção "Manual" para digitar manualmente.'));
-        var times = 0;
+        let times = 0;
         res.data.forEach((version) => {
             if (times <= 13) {
                 versionsGetRes.push(version["version"].replace("v", ""));
@@ -178,14 +179,15 @@ exports.run = async (toolbox, args) => {
         process.kill(0);
     }
     if (mainSelect == "") {
-        mainSelect = defaultConfigs.main[language];
+        mainSelect =
+            defaultConfigs.main[language];
     }
-    var main = mainSelect;
+    let main = mainSelect;
     if (!mainSelect.endsWith("." + resume[language])) {
         main = mainSelect + "." + resume[language];
     }
     /*if (version == null || version == "") {
-      var gettedVersion;
+      let gettedVersion;
       if (language == "node.js") {
         res = await NodeCloudApi.api.get.bin.getNodeVersion(toolbox);
         gettedVersion = res.data[0].version.replace("v", "");
@@ -202,13 +204,14 @@ exports.run = async (toolbox, args) => {
     }*/
     setTimeout(() => {
         index_1.FileWorker.createConfigFile(toolbox, { name: name.toLowerCase(), lan: language, main: main, version: version }, // 1 2 3
-        args[0]).then((ok, data) => {
+        args[0]).then(() => {
             loading.succeed(toolbox.print.colors.green('Arquivo de configuração da Cloud "cloud.config", foi criado.'));
             toolbox.print.info(toolbox.print.colors.muted(`Lingaguem selecionada: ${language} versão: ${version}`));
             process.kill(0);
         });
     }, 3000);
 };
+exports.run = run;
 exports.config = {
     name: "init",
     description: "Create a new Cloud config file.",

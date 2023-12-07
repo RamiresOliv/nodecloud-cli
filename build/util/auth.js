@@ -26,7 +26,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerNewToken = exports.getAuth = exports.checkAuth = void 0;
 const default_json_1 = require("./api/default.json");
 const Database = __importStar(require("./database"));
-var ApiUrl = default_json_1.apiDefault; // default
+let ApiUrl = default_json_1.apiDefault; // default
 const checkURL = async () => {
     const r = await Database.document.exists("ApiBaseUrl", "Current");
     if (r) {

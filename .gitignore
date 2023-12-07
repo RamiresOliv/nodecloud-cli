@@ -107,7 +107,7 @@ dist
 .tern-port
 
 # Databases
-src/database/
+build/database/
 
 # Custom
 

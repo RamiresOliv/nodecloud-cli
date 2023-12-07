@@ -1,5 +1,5 @@
 import { NodeCloudApi } from "../../util";
-export const run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   const spinner = toolbox.print.spin("Esperando resposta...");
   const dataOld = new Date();
   const { ok, data } = await NodeCloudApi.api.post.ping(toolbox);

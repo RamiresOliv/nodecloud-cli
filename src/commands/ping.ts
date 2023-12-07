@@ -6,14 +6,14 @@ import {
   Exec,
 } from "../util/index";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   const spinner = toolbox.print.spin("Esperando resposta...");
   const dataOld: Date = new Date();
   const { ok, data } = await NodeCloudApi.api.post.ping(toolbox);
   const dataNew: Date = new Date();
 
   if (ok) {
-    var result = (dataOld.getTime() - dataNew.getTime()) * -1;
+    let result = (dataOld.getTime() - dataNew.getTime()) * -1;
     spinner.succeed("🏓 Pong! Latência de " + result + "MS");
 
     if (args[2] && args[2].toLowerCase() == "--debug") {
@@ -34,7 +34,7 @@ exports.run = async (toolbox, args: string[]) => {
   }
 };
 
-exports.config = {
+export const config = {
   name: "ping",
   description: "Tests the server response.",
 };

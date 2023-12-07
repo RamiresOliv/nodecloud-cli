@@ -10,10 +10,14 @@ process.argv[1] = __dirname.replace("\\", "/") + "/.."; // <- nodecloud-root
 
 const { exec } = require("child_process");
 const package = require("../package.json");
-const ejs = require("ejs");
 const toolbox = require("gluegun");
 
+// Modules:
+const archiver = require("archiver");
+const ejs = require("ejs");
+
 toolbox.EJS = ejs;
+toolbox.archiver = archiver;
 
 const title = "NodeCloud-CLI [BIN]";
 /*

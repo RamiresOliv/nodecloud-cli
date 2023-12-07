@@ -8,7 +8,7 @@ import {
 import * as apiSettings from "../util/api/default.json";
 import * as Database from "../util/database";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   Database.collection.create("ApiBaseUrl");
   if (
     (args[2] != null && args[2].toLowerCase() == "-rm") ||
@@ -61,7 +61,7 @@ exports.run = async (toolbox, args: string[]) => {
     }
     process.exit(0);
   }
-  var { baseurl } = await toolbox.prompt.ask([
+  let { baseurl } = await toolbox.prompt.ask([
     {
       type: "input",
       name: "baseurl",
@@ -86,7 +86,7 @@ exports.run = async (toolbox, args: string[]) => {
   }
 };
 
-exports.config = {
+export const config = {
   name: "baseurl",
   description: "Changes the API baseURL.",
   aliases: ["b", "https", "api"],

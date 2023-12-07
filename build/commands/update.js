@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const child_process_1 = require("child_process");
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     toolbox.print.muted(`nodecloud-cli V` +
         require("../../package.json").version +
         "-" +
@@ -14,7 +15,7 @@ exports.run = async (toolbox, args) => {
         child.stderr.on("data", (data) => {
             err += data;
         });
-        child.on("exit", function (code, signal) {
+        child.on("exit", function (code) {
             if (code != 0) {
                 loading.fail(toolbox.print.colors.red(`FAIL: code: ${code}`));
                 toolbox.print.error(err);
@@ -31,6 +32,7 @@ exports.run = async (toolbox, args) => {
         process.kill(0);
     }
 };
+exports.run = run;
 exports.config = {
     name: "update",
     description: "Updates the NPM Module to the latest version.",

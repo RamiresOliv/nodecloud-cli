@@ -6,7 +6,7 @@ import {
   Exec,
 } from "../util/index";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: AppsInfo"));
 
   setTimeout(async () => {
@@ -23,7 +23,7 @@ exports.run = async (toolbox, args: string[]) => {
     }
     NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
-      .then(async (resGetProjects) => {
+      .then(async (resGetProjects: any) => {
         if (!resGetProjects.data) {
           toolbox.print.error(
             toolbox.print.colors.red(
@@ -51,7 +51,7 @@ exports.run = async (toolbox, args: string[]) => {
         toolbox.print.highlight("Suas aplicações:");
         toolbox.print.muted("(Isso pode demorar um pouco..)");
         toolbox.print.muted("");
-        var totalofRuns = 0;
+        let totalofRuns = 0;
         setTimeout(async () => {
           const spinner1 = new toolbox.print.spin(
             toolbox.print.colors.cyan(
@@ -61,10 +61,10 @@ exports.run = async (toolbox, args: string[]) => {
                 )
             )
           );
-          resGetProjects.data.returns.forEach((value) => {
+          resGetProjects.data.returns.forEach((value: string) => {
             NodeCloudApi.api.post.bin
               .getProjectInfo(toolbox, value, token.document)
-              .then(async (res) => {
+              .then(async (res: any) => {
                 if (!res || res.data.ok) {
                   let line = "";
                   line += toolbox.print.colors.cyan(value + ":") + "\n";
@@ -133,7 +133,7 @@ exports.run = async (toolbox, args: string[]) => {
   }, 2000);
 };
 
-exports.config = {
+export const config = {
   name: "apps",
   description: "Show informations about all your saved apps in the Cloud.",
   aliases: ["as", "appsinfo", "showapps"],

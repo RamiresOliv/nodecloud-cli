@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const index_1 = require("../util/index");
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     toolbox.print.info(toolbox.print.colors.dim(`Processo: Stop ${args[2] ? args[2] : ""}`));
     setTimeout(async () => {
         const { ok, token } = await index_1.Authentification.getAuth(toolbox);
@@ -75,6 +76,7 @@ exports.run = async (toolbox, args) => {
         });
     }, 2000);
 };
+exports.run = run;
 exports.config = {
     name: "stop",
     description: "Stop a selected application in the Cloud.",

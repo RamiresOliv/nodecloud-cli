@@ -23,9 +23,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const apiSettings = __importStar(require("../util/api/default.json"));
 const Database = __importStar(require("../util/database"));
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     Database.collection.create("ApiBaseUrl");
     if ((args[2] != null && args[2].toLowerCase() == "-rm") ||
         (args[2] != null && args[2].toLowerCase() == "-remove") ||
@@ -61,7 +62,7 @@ exports.run = async (toolbox, args) => {
         }
         process.exit(0);
     }
-    var { baseurl } = await toolbox.prompt.ask([
+    let { baseurl } = await toolbox.prompt.ask([
         {
             type: "input",
             name: "baseurl",
@@ -85,6 +86,7 @@ exports.run = async (toolbox, args) => {
         process.exit(0);
     }
 };
+exports.run = run;
 exports.config = {
     name: "baseurl",
     description: "Changes the API baseURL.",

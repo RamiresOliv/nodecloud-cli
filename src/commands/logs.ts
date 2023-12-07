@@ -7,8 +7,13 @@ import {
 } from "../util/index";
 import { exec } from "child_process";
 
-async function tooBig(toolbox, askPrompt, res, needAsk: boolean) {
-  var confirmation = true;
+async function tooBig(
+  toolbox: any,
+  askPrompt: any,
+  res: any,
+  needAsk: boolean
+) {
+  let confirmation = true;
   if (needAsk) {
     confirmation = await toolbox.prompt.confirm(
       toolbox.print.colors.yellow(
@@ -20,17 +25,17 @@ async function tooBig(toolbox, askPrompt, res, needAsk: boolean) {
     );
   }
   if (confirmation) {
-    var type = "open " + res.added.txtPath;
+    let type = "open " + res.added.txtPath;
     if (process.platform == "win32") {
       type = "c:\\windows\\notepad.exe " + res.added.txtPath;
     }
 
-    const a = exec(type);
+    const a: any = exec(type);
 
-    a.stdout.on("data", (a) => {
+    a.stdout.on("data", (a: string) => {
       console.log(a);
     });
-    a.on("close", (a) => {
+    a.on("close", (a: string) => {
       process.kill(0);
     });
     console.log(
@@ -52,7 +57,7 @@ async function tooBig(toolbox, askPrompt, res, needAsk: boolean) {
   }
 }
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Logs"));
 
   setTimeout(async () => {
@@ -69,7 +74,7 @@ exports.run = async (toolbox, args: string[]) => {
     }
     NodeCloudApi.api.post.bin
       .getMyProjects(toolbox, token.document)
-      .then(async (resGetProjects) => {
+      .then(async (resGetProjects: any) => {
         if (!resGetProjects.data) {
           toolbox.print.error(
             toolbox.print.colors.red(
@@ -113,7 +118,7 @@ exports.run = async (toolbox, args: string[]) => {
         setTimeout(async () => {
           NodeCloudApi.api.post
             .logs(toolbox, askPrompt.Project, token.document)
-            .then(async (res) => {
+            .then(async (res: any) => {
               if (res.data.ok) {
                 spinner1.succeed(
                   toolbox.print.colors.green(
@@ -189,7 +194,7 @@ exports.run = async (toolbox, args: string[]) => {
   }, 2000);
 };
 
-exports.config = {
+export const config = {
   name: "logs",
   description: "Mostra o terminal da aplicação selecionada.",
   aliases: ["t", "terminal"],

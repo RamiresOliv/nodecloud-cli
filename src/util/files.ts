@@ -1,13 +1,12 @@
 import { existsSync, createWriteStream, readdirSync, statSync } from "fs";
-import * as archiver from "archiver";
 
 // Selling this product is not allowed.
-export const fileExists = (toolbox, Path, Name) => {
+export const fileExists = (toolbox: any, Path: string, Name: string) => {
   const r = existsSync(Path + "/" + Name);
   return r;
 };
 
-export const readConfigFile = async (toolbox, FilePath) => {
+export const readConfigFile = async (toolbox: any, FilePath: string) => {
   if (!existsSync(FilePath + "/cloud.config"))
     return [false, "File don't exists."];
   try {
@@ -15,19 +14,19 @@ export const readConfigFile = async (toolbox, FilePath) => {
       path = path.replace(/(\\|\/)$/, "");
       return toolbox.filesystem.read(FilePath + "/cloud.config");
     }
-    const readded = Object.fromEntries(
+    const readded: any = Object.fromEntries(
       readCloudConf()
         .split(/\r?\n/)
-        .map((a) => a.split("="))
+        .map((a: any) => a.split("="))
     );
 
     readded.IGNOREDS = JSON.parse(readded.IGNOREDS);
 
-    for (var item in readded) {
+    for (let item of readded) {
       if (typeof readded[item] == "string")
         readded[item] = readded[item].replace('"', "").replace('"', "");
       else if (Array.isArray(readded[item]))
-        for (var i in readded[item]) {
+        for (let i of readded[item]) {
           if (typeof readded[item] == "string")
             item[i] = item[i].replace('"', "").replace('"', "");
         }
@@ -38,7 +37,7 @@ export const readConfigFile = async (toolbox, FilePath) => {
   }
 };
 
-export const checkRequiredFiles = async (toolbox, path) => {
+export const checkRequiredFiles = async (toolbox: any, path: string) => {
   if (!existsSync(path + "/cloud.config")) return [false, 404, "cloud.config"];
   const r = await exports.readConfigFile(toolbox, path);
   if (r[0] == false && r[1] == "500") {
@@ -56,22 +55,22 @@ export const checkRequiredFiles = async (toolbox, path) => {
     r.return.LANGUAGE == "" ||
     r.return.START == ""
   ) {
-    var detecteds = [];
-    var invalids = [];
-    var count = 0;
+    let detecteds: unknown[] = [];
+    let invalids: unknown[] = [];
+    let count = 0;
 
     delete r.return.IGNOREDS;
 
-    for (var i in r.return) {
+    for (let i in r.return) {
       if (r.return[i] == null || r.return[i] == "") {
         detecteds.push(invalids);
       }
     }
 
-    for (var i in r.return) {
+    for (let i in r.return) {
       if (r.return[i] == null || r.return[i] == "") {
         count += 1;
-        var returns = i + ",";
+        let returns = i + ",";
         if (detecteds.length == count) returns = i + ".";
         invalids.push(returns);
       }
@@ -115,15 +114,19 @@ export const checkRequiredFiles = async (toolbox, path) => {
   return [true, 200];
 };
 
-export const createConfigFile = async (toolbox, Settings, AppPath) => {
+export const createConfigFile = async (
+  toolbox: any,
+  Settings: any,
+  AppPath: string
+) => {
   const result = await toolbox.EJS.render(
     toolbox.filesystem.read(__dirname + "/../templates/cloud.config.ejs"),
     {
-      Name: Settings.name,
-      Language: Settings.lan,
-      Version: Settings.version,
+      Name: Settings["name"],
+      Language: Settings["lan"],
+      Version: Settings["version"],
       OS: "alpine",
-      Starter: Settings.main,
+      Starter: Settings["main"],
       Id: "N/A",
       Ignoreds: "[]",
     }
@@ -133,19 +136,19 @@ export const createConfigFile = async (toolbox, Settings, AppPath) => {
 };
 
 export const createProjectZipFile = async (
-  toolbox,
-  toZipPath,
-  targetPath,
-  targetName
+  toolbox: any,
+  toZipPath: string,
+  targetPath: string,
+  targetName: string
 ) => {
-  var outputFile = createWriteStream(targetPath + "/" + targetName + ".zip");
-  var archive = archiver("zip");
+  let outputFile = createWriteStream(targetPath + "/" + targetName + ".zip");
+  let archive = toolbox.archiver.archiver("zip");
 
-  archive.on("error", function (err) {
+  archive.on("error", function (err: Error) {
     throw err;
   });
 
-  var venvFolder = "";
+  let venvFolder = "";
   readdirSync(toZipPath)
     .filter((childName) => !statSync(toZipPath + "/" + childName).isFile())
     .forEach((folder) => {

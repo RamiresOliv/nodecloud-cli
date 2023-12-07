@@ -1,14 +1,13 @@
 import { readdirSync } from "fs";
-import * as ejs from "ejs";
 
 // Selling this product is not allowed.
 
 const title: string = "NodeCloud-CLI";
 
 // Only Time commands handler
-export const cli = async (args: string[], toolbox, requires) => {
-  const commands = {};
-  const aliases = {};
+export const cli = async (args: string[], toolbox: any, requires: any) => {
+  const commands: Record<string, Function> = {};
+  const aliases: Record<string, string> = {};
 
   readdirSync(args[1] + "/build/commands")
     .filter((file) => file.endsWith(".js"))
@@ -90,7 +89,9 @@ export const cli = async (args: string[], toolbox, requires) => {
     requires.child_proccess.exec(
       `$host.UI.RawUI.WindowTitle = "${title} ${command}"`
     );
-    cmdRun(toolbox, args);
+    if (cmdRun != undefined) {
+      cmdRun(toolbox, args);
+    }
   } catch (err) {
     toolbox.print.error(`---`);
     toolbox.print.error(
@@ -106,5 +107,5 @@ export const cli = async (args: string[], toolbox, requires) => {
 };
 
 export const test = (res: string) => {
-  return "Hello World! R: " + (res || "N/A")
-}
+  return "Hello World! R: " + (res || "N/A");
+};

@@ -1,31 +1,7 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProjectZipFile = exports.createConfigFile = exports.checkRequiredFiles = exports.readConfigFile = exports.fileExists = void 0;
 const fs_1 = require("fs");
-const archiver = __importStar(require("archiver"));
 // Selling this product is not allowed.
 const fileExists = (toolbox, Path, Name) => {
     const r = (0, fs_1.existsSync)(Path + "/" + Name);
@@ -44,11 +20,11 @@ const readConfigFile = async (toolbox, FilePath) => {
             .split(/\r?\n/)
             .map((a) => a.split("=")));
         readded.IGNOREDS = JSON.parse(readded.IGNOREDS);
-        for (var item in readded) {
+        for (let item of readded) {
             if (typeof readded[item] == "string")
                 readded[item] = readded[item].replace('"', "").replace('"', "");
             else if (Array.isArray(readded[item]))
-                for (var i in readded[item]) {
+                for (let i of readded[item]) {
                     if (typeof readded[item] == "string")
                         item[i] = item[i].replace('"', "").replace('"', "");
                 }
@@ -75,19 +51,19 @@ const checkRequiredFiles = async (toolbox, path) => {
         r.return.NAME == "" ||
         r.return.LANGUAGE == "" ||
         r.return.START == "") {
-        var detecteds = [];
-        var invalids = [];
-        var count = 0;
+        let detecteds = [];
+        let invalids = [];
+        let count = 0;
         delete r.return.IGNOREDS;
-        for (var i in r.return) {
+        for (let i in r.return) {
             if (r.return[i] == null || r.return[i] == "") {
                 detecteds.push(invalids);
             }
         }
-        for (var i in r.return) {
+        for (let i in r.return) {
             if (r.return[i] == null || r.return[i] == "") {
                 count += 1;
-                var returns = i + ",";
+                let returns = i + ",";
                 if (detecteds.length == count)
                     returns = i + ".";
                 invalids.push(returns);
@@ -128,11 +104,11 @@ const checkRequiredFiles = async (toolbox, path) => {
 exports.checkRequiredFiles = checkRequiredFiles;
 const createConfigFile = async (toolbox, Settings, AppPath) => {
     const result = await toolbox.EJS.render(toolbox.filesystem.read(__dirname + "/../templates/cloud.config.ejs"), {
-        Name: Settings.name,
-        Language: Settings.lan,
-        Version: Settings.version,
+        Name: Settings["name"],
+        Language: Settings["lan"],
+        Version: Settings["version"],
         OS: "alpine",
-        Starter: Settings.main,
+        Starter: Settings["main"],
         Id: "N/A",
         Ignoreds: "[]",
     });
@@ -141,12 +117,12 @@ const createConfigFile = async (toolbox, Settings, AppPath) => {
 };
 exports.createConfigFile = createConfigFile;
 const createProjectZipFile = async (toolbox, toZipPath, targetPath, targetName) => {
-    var outputFile = (0, fs_1.createWriteStream)(targetPath + "/" + targetName + ".zip");
-    var archive = archiver("zip");
+    let outputFile = (0, fs_1.createWriteStream)(targetPath + "/" + targetName + ".zip");
+    let archive = toolbox.archiver.archiver("zip");
     archive.on("error", function (err) {
         throw err;
     });
-    var venvFolder = "";
+    let venvFolder = "";
     (0, fs_1.readdirSync)(toZipPath)
         .filter((childName) => !(0, fs_1.statSync)(toZipPath + "/" + childName).isFile())
         .forEach((folder) => {

@@ -75,7 +75,9 @@ const cli = async (args, toolbox, requires) => {
     try {
         requires.child_proccess.exec("title " + title + " " + command);
         requires.child_proccess.exec(`$host.UI.RawUI.WindowTitle = "${title} ${command}"`);
-        cmdRun(toolbox, args);
+        if (cmdRun != undefined) {
+            cmdRun(toolbox, args);
+        }
     }
     catch (err) {
         toolbox.print.error(`---`);

@@ -1,13 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const index_1 = require("../util/index");
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     const spinner = toolbox.print.spin("Esperando resposta...");
     const dataOld = new Date();
     const { ok, data } = await index_1.NodeCloudApi.api.post.ping(toolbox);
     const dataNew = new Date();
     if (ok) {
-        var result = (dataOld.getTime() - dataNew.getTime()) * -1;
+        let result = (dataOld.getTime() - dataNew.getTime()) * -1;
         spinner.succeed("🏓 Pong! Latência de " + result + "MS");
         if (args[2] && args[2].toLowerCase() == "--debug") {
             toolbox.print.muted("[DEBUG] HTTP RESPONSE: " + data);
@@ -23,6 +24,7 @@ exports.run = async (toolbox, args) => {
         process.kill(0);
     }
 };
+exports.run = run;
 exports.config = {
     name: "ping",
     description: "Tests the server response.",

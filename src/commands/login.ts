@@ -6,7 +6,7 @@ import {
   Exec,
 } from "../util/index";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   const pingReturn = await NodeCloudApi.api.post.ping(toolbox);
 
   if (!pingReturn.ok) {
@@ -55,7 +55,7 @@ exports.run = async (toolbox, args: string[]) => {
   }
 };
 
-exports.config = {
+export const config = {
   name: "login",
   description: "Uses a API Token for executes commands in CLI.",
   aliases: ["l", "tk", "token", "connect"],

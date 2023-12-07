@@ -1,6 +1,6 @@
 {
   "exclude": ["node_modules", "**/.ignore_*", "**/build/"],
-  "include": ["src", "index.d.ts", "index.d.ts"],
+  "include": ["src", "src/templates/*", "index.d.ts", "index.d.ts"],
   "types": ["local-db-express"],
   "compilerOptions": {
     // "incremental": true,
@@ -64,7 +64,7 @@
     "esModuleInterop": true,
     // "preserveSymlinks": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
+    "strict": true,
     // "noImplicitAny": true,
     // "strictNullChecks": true,
     // "strictFunctionTypes": true,

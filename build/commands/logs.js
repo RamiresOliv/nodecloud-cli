@@ -1,16 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const index_1 = require("../util/index");
 const child_process_1 = require("child_process");
 async function tooBig(toolbox, askPrompt, res, needAsk) {
-    var confirmation = true;
+    let confirmation = true;
     if (needAsk) {
         confirmation = await toolbox.prompt.confirm(toolbox.print.colors.yellow('O terminal de "' +
             askPrompt.Project +
             '" parece ser muito grande! (>= 1000)') + " Desejá abrir os logs no seu bloco de notas?", true);
     }
     if (confirmation) {
-        var type = "open " + res.added.txtPath;
+        let type = "open " + res.added.txtPath;
         if (process.platform == "win32") {
             type = "c:\\windows\\notepad.exe " + res.added.txtPath;
         }
@@ -30,7 +31,7 @@ async function tooBig(toolbox, askPrompt, res, needAsk) {
         process.kill(0);
     }
 }
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     toolbox.print.info(toolbox.print.colors.dim("Processo: Logs"));
     setTimeout(async () => {
         const { ok, token } = await index_1.Authentification.getAuth(toolbox);
@@ -112,6 +113,7 @@ exports.run = async (toolbox, args) => {
         });
     }, 2000);
 };
+exports.run = run;
 exports.config = {
     name: "logs",
     description: "Mostra o terminal da aplicação selecionada.",

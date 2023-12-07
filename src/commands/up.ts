@@ -6,7 +6,7 @@ import {
   Exec,
 } from "../util/index";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Upload"));
   const spinner1 = new toolbox.print.spin(
     toolbox.print.colors.cyan("Começando...")
@@ -55,7 +55,7 @@ exports.run = async (toolbox, args: string[]) => {
     );
     process.kill(0);
   } else if (!response[0] && response[1] == 400) {
-    var msg =
+    let msg =
       "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
 
     if (response[2]) msg += "TIP: " + response[2];
@@ -103,13 +103,13 @@ exports.run = async (toolbox, args: string[]) => {
             toolbox.print.colors.muted(" 📦 Empacotando arquivos.")
         )
       );
-      var sended = false;
+      let sended = false;
       spinner3.start();
       if (!sended) {
         sended = true;
         NodeCloudApi.api.post
           .up(toolbox, zipR.filePath, zipR.fileName, token.document)
-          .then((res) => {
+          .then((res: any) => {
             if (res.data && res.data.ok) {
               spinner3.succeed(
                 toolbox.print.colors.green(
@@ -166,7 +166,7 @@ exports.run = async (toolbox, args: string[]) => {
   }, 2000);
 };
 
-exports.config = {
+export const config = {
   name: "upload",
   description: "Executes a remote up request to the Cloud.",
   aliases: ["u", "up"],

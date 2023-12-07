@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
 const index_1 = require("../util/index");
-exports.run = async (toolbox, args) => {
+const run = async (toolbox, args) => {
     toolbox.print.info(toolbox.print.colors.dim("Processo: Upload"));
     const spinner1 = new toolbox.print.spin(toolbox.print.colors.cyan("Começando..."));
     const spinner2 = new toolbox.print.spin(toolbox.print.colors.cyan("Compactando arquivos..." +
@@ -26,7 +27,7 @@ exports.run = async (toolbox, args) => {
         process.kill(0);
     }
     else if (!response[0] && response[1] == 400) {
-        var msg = "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
+        let msg = "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
         if (response[2])
             msg += "TIP: " + response[2];
         spinner1.fail(toolbox.print.colors.red(msg));
@@ -51,7 +52,7 @@ exports.run = async (toolbox, args) => {
         zipR.Filer.on("close", async () => {
             spinner2.succeed(toolbox.print.colors.green("Compactando arquivos..." +
                 toolbox.print.colors.muted(" 📦 Empacotando arquivos.")));
-            var sended = false;
+            let sended = false;
             spinner3.start();
             if (!sended) {
                 sended = true;
@@ -88,6 +89,7 @@ exports.run = async (toolbox, args) => {
         });
     }, 2000);
 };
+exports.run = run;
 exports.config = {
     name: "upload",
     description: "Executes a remote up request to the Cloud.",

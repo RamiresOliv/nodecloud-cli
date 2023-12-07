@@ -6,7 +6,7 @@ import {
   Exec,
 } from "../util/index";
 
-exports.run = async (toolbox, args: string[]) => {
+export const run = async (toolbox: any, args: string[]) => {
   toolbox.print.info(toolbox.print.colors.dim("Processo: Commit"));
   toolbox.print.info(toolbox.print.colors.cyan("Começando..."));
   const { ok, token } = await Authentification.getAuth(toolbox);
@@ -23,7 +23,7 @@ exports.run = async (toolbox, args: string[]) => {
   }
   NodeCloudApi.api.post.bin
     .getMyProjects(toolbox, token.document)
-    .then(async (resGetProjects) => {
+    .then(async (resGetProjects: any) => {
       if (!resGetProjects.data) {
         toolbox.print.error(
           toolbox.print.colors.red(
@@ -110,7 +110,7 @@ exports.run = async (toolbox, args: string[]) => {
           );
           process.kill(0);
         } else if (!response[0] && response[1] == 404) {
-          var msg =
+          let msg =
             "Falha, algum valor do arquivo de configuração está invalido, porfavor verifique! ";
 
           if (response[2]) msg += "TIP: " + response[2];
@@ -158,7 +158,7 @@ exports.run = async (toolbox, args: string[]) => {
                 askPrompt.Project,
                 token.document
               )
-              .then((res) => {
+              .then((res: any) => {
                 if (res.data && res.data.ok) {
                   spinner3.succeed(
                     toolbox.print.colors.green(
@@ -216,7 +216,7 @@ exports.run = async (toolbox, args: string[]) => {
     });
 };
 
-exports.config = {
+export const config = {
   name: "commit",
   description: "Executes a remote commit request to the Cloud.",
   aliases: ["c", "commitar"],

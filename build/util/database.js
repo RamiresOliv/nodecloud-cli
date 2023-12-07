@@ -87,9 +87,9 @@ const { mkdirSync, existsSync, writeFileSync, readFileSync, unlinkSync, readdirS
 if (!existsSync(config_file_path)) {
     writeFileSync(config_file_path, JSON.stringify(default_configs));
 }
-var getconfig = require(config_file_path);
-var exportation = getconfig.exportation;
-var globalBase = getconfig.global;
+let getconfig = require(config_file_path);
+let exportation = getconfig.exportation;
+let globalBase = getconfig.global;
 if (!existsSync(project_root + globalBase.datastorage_folder)) {
     mkdirSync(project_root + globalBase.datastorage_folder);
     writeFileSync(project_root + globalBase.datastorage_folder + "/" + "info", "LDE worker directory. (Database system.)");

@@ -1,18 +1,21 @@
-exports.run = async (_toolbox, args) => {
-    console.log(_toolbox.print.colors.highlight("NodeCloud-CLI Commands List:"));
-    const files = _toolbox.filesystem
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.config = exports.run = void 0;
+const run = async (toolbox, args) => {
+    console.log(toolbox.print.colors.highlight("NodeCloud-CLI Commands List:"));
+    const files = toolbox.filesystem
         .list(__dirname)
         .filter((child) => child.endsWith(".js"));
     const tableItens = [
         [
-            _toolbox.print.colors.highlight("Command"),
-            _toolbox.print.colors.highlight("Aliases"),
-            _toolbox.print.colors.highlight("Description"),
+            toolbox.print.colors.highlight("Command"),
+            toolbox.print.colors.highlight("Aliases"),
+            toolbox.print.colors.highlight("Description"),
         ],
     ];
     files.forEach((fileName) => {
         const file = require(__dirname + "/" + fileName);
-        var aliases = "";
+        let aliases = "";
         if (file.config.aliases && file.config.aliases.length != 0) {
             file.config.aliases.forEach((alias, i) => {
                 if (file.config.aliases.length == i + 1) {
@@ -27,17 +30,18 @@ exports.run = async (_toolbox, args) => {
             aliases = "N/A";
         }
         tableItens.push([
-            _toolbox.print.colors.green(file.config.name),
-            _toolbox.print.colors.yellow(aliases),
-            _toolbox.print.colors.grey(file.config.description),
+            toolbox.print.colors.green(file.config.name),
+            toolbox.print.colors.yellow(aliases),
+            toolbox.print.colors.grey(file.config.description),
         ]);
     });
-    _toolbox.print.table(tableItens, {
+    toolbox.print.table(tableItens, {
         format: "markdown",
     });
-    _toolbox.print.muted("Installed CLI Version: " + require("../../package.json").version);
-    _toolbox.print.muted("All of this commands are disponible in the CLI.");
+    toolbox.print.muted("Installed CLI Version: " + require("../../package.json").version);
+    toolbox.print.muted("All of this commands are disponible in the CLI.");
 };
+exports.run = run;
 exports.config = {
     name: "help",
     description: "Show all commands disponible in the CLI.",
